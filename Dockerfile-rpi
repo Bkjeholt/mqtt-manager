@@ -1,0 +1,16 @@
+# ************************************************************************
+# Product    : Home information and control
+# Date       : 2016-12-09
+# Copyright  : Copyright (C) 2016 Kjeholt Engineering. All rights reserved.
+# Contact    : dev@kjeholt.se
+# Url        : http://www-dev.kjeholt.se
+# Licence    : ---
+# -------------------------------------------------------------------------
+# File       : SupportFiles/docker/Dockerfile/Dockerfile-rpi
+# Version    : 0.2.2
+# Author     : Bjorn Kjeholt
+# *************************************************************************
+ 
+FROM bkjeholt/base-nodejs:latest-rpi
+
+MAINTAINER Björn Kjeholt <dev@kjeholt.se>
