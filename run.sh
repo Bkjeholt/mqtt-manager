@@ -1,15 +1,15 @@
-#!/bin/bash -f
+#!/bin/sh -f
+DOCKER_IMAGE_NAME=bkjeholt/mqtt-agent-onewire
+DOCKER_CONTAINER_NAME=hic-agent-onewire
 
-DOCKER_IMAGE_NAME=bkjeholt/mqtt-manager
-DOCKER_CONTAINER_NAME=hic-manager
+DOCKER_IMAGE_BASE_TAG=${1}
 
-DOCKER_CONTAINER_NAME_MYSQL=mysql-db-hic
-DOCKER_CONTAINER_NAME_MQTT=mqtt-broker
+ARCHITECTURE=rpi
 
 echo "------------------------------------------------------------------------"
 echo "-- Run image:       $DOCKER_IMAGE_NAME:latest "
 
-DOCKER_IMAGE=$(../SupportFiles/DockerSupport/get-latest-image-string.sh $DOCKER_IMAGE_NAME)
+DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_BASE_TAG}-${ARCHITECTURE}
 
 echo "------------------------------------------------------------------------"
 echo "-- Remove docker container if it exists"
@@ -22,7 +22,6 @@ echo "------------------------------------------------------------------------"
 echo "-- Start container "
 echo "-- Based on image: $DOCKER_IMAGE "
 echo "------------------------------------------------------------------------"
-
 docker run -d \
            --restart="always" \
            --link ${DOCKER_CONTAINER_NAME_MYSQL}:mysql \
