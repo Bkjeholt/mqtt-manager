@@ -1,0 +1,26 @@
+{
+  "name" : "mqtt-manager",
+  "version" : "0.5.2",
+  "description" : "Home information Center mqtt-based Manager\nHistory:\n0.4  Added docker links to both mysql and mqtt servers",
+  "keywords" : [ "hic", "mqtt-based", "manager" ],
+  "author" : {
+    "name" : "Björn Kjeholt",
+    "email" : "dev@kjeholt.se",
+    "url" : "http://www-dev.kjeholt.se"
+  },
+  "main" : "./js/main.js",
+  "contributors" : [ ],
+  "dependencies" : {
+    "mqtt" : "1.7.3",
+    "mysql" : "2.10.2"
+  },
+  "scripts" : {
+    "start" : "node TestWrapper.js"
+  },
+  "bugs" : {
+    "url" : "null"
+  },
+  "license" : {
+    "type" : "mit"
+  }
+}
