@@ -11,18 +11,26 @@
  Author     : Bjorn Kjeholt
  *************************************************************************/
 
-var managerClass = require("./support/managerClass");
+var managerClass = require("./Classes/managerClass");
+var healthClass = require("./Classes/healthCheck");
 
-var configInfo = { config: {
-                        name: process.env.npm_package_name,
-                        rev:  process.env.npm_package_version },
-                   mysql: { 
-                        ip_addr: process.env.MYSQL_PORT_3306_TCP_ADDR,  // "192.168.1.10"
-                        port_no: process.env.MYSQL_PORT_3306_TCP_PORT,  // "3306"
+var configInfo = {  config: {
+                        name: process.env.DOCKER_CONTAINER_NAME,
+                        rev:  process.env.DOCKER_IMAGE_TAG,
+                        docker: {
+                            image: process.env.DOCKER_IMAGE_NAME,
+                            image_tag: process.env.DOCKER_IMAGE_TAG,
+                            container: process.env.DOCKER_CONTAINER_NAME } },
+                    health_check: {
+                         port_no: 3000,
+                         check_functions: [] },
+                    mysql: { 
+                        ip_addr: (process.env.MYSQL_IP_ADDR !== undefined)? process.env.MYSQL_IP_ADDR : process.env.MYSQL_PORT_3306_TCP_ADDR,  // "192.168.1.10"
+                        port_no: (process.env.MYSQL_PORT_NO !== undefined)? process.env.MYSQL_PORT_NO : process.env.MYSQL_PORT_3306_TCP_PORT,  // "3306"
                         user:    "root",
                         passw:   process.env.MYSQL_ENV_MYSQL_ROOT_PASSWORD,
                         scheme:  process.env.MYSQL_ENV_MYSQL_DATABASE }, // "hic-v2"
-                   mqtt: {
+                    mqtt: {
                         ip_addr: (process.env.MQTT_IP_ADDR !== undefined)? process.env.MQTT_IP_ADDR : process.env.MQTT_PORT_1883_TCP_ADDR,   // "192.168.1.10"
                         port_no: (process.env.MQTT_PORT_NO !== undefined)? process.env.MQTT_PORT_NO : process.env.MQTT_PORT_1883_TCP_PORT,   // "1883"
                         user:    (process.env.MQTT_USER !== undefined)? process.env.MQTT_USER : process.env.MQTT_ENV_MQTT_USER,      //"hic_nw",
@@ -41,5 +49,6 @@ var configInfo = { config: {
                                     { topic: "calc/request/#", qos: 1 } ] }
                  };
 
-var manager = managerClass.create_manager(configInfo);
+var manager = managerClass.create(configInfo);
+var healthObj = healthClass.create(configInfo)
 
