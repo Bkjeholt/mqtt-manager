@@ -119,6 +119,6 @@ databaseClass = function (ci) {
     },30000);
 };
 
-exports.create_dbh = function (ci) {
+exports.create = function (ci) {
     return new databaseClass(ci);
 };

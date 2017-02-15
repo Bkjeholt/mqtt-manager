@@ -196,7 +196,7 @@ mqttHandler = function(ci) {
     }());
 };
 
-exports.create_mqtt = function (ci) {
+exports.create = function (ci) {
     return new mqttHandler(ci);
 };
 

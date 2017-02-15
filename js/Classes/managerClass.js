@@ -331,10 +331,10 @@ managerClass = function(ci) {
         self.ci.mqtt.functions.message = self.mqttMessage;        
         console.log("--------------------------------------------------------");
         console.log("ManagerClass: Initiate MQTT sub class");
-        self.mqtt = mqttHandler.create_mqtt(self.ci);
+        self.mqtt = mqttHandler.create(self.ci);
         console.log("--------------------------------------------------------");
         console.log("ManagerClass: Initiate Database sub class");
-        self.db = databaseClass.create_dbh(self.ci);
+        self.db = databaseClass.create(self.ci);
         console.log("--------------------------------------------------------");
         
     }());
@@ -400,7 +400,7 @@ managerClass = function(ci) {
     }, 2000);
 };
 
-exports.create_manager = function(ci) {
+exports.create = function(ci) {
     return new managerClass(ci);
 };
 
