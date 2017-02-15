@@ -78,7 +78,7 @@ mqttHandler = function(ci) {
         }
     };
     
-    this.topicStrToJson = function (str) {
+/*    this.topicStrToJson = function (str) {
         var t = str.split("/");
         var result = {group: t[0],
                        order: t[1],
@@ -113,7 +113,7 @@ mqttHandler = function(ci) {
         
         return m;
     };
-    
+*/    
     this.topicJsonToStr = function (topic) {
         var result = "" + topic.group + "/" + topic.order;
         switch(topic.group) {
@@ -194,6 +194,8 @@ mqttHandler = function(ci) {
         mqttClient.on('close',(self.disconnect));
         mqttClient.on('message',(self.ci.mqtt.functions.message));
     }());
+    
+    
 };
 
 exports.create = function (ci) {
