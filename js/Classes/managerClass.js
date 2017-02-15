@@ -128,7 +128,8 @@ managerClass = function(ci) {
                             `DataValue`,\
                             `TopicAddress` FROM `list_all_unpublished_data`";
         
-        if (self.db.connected())
+        if (self.db) 
+            if (self.db.connected())
         self.db.query(query, function(err, rows) {
             var rowIndex = 0;
             var queryDeleteMessage = "";
