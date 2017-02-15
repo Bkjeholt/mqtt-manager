@@ -104,7 +104,7 @@ managerClass = function(ci) {
         
     };
             
-        
+    self.setup();    
     /*
      * Send a status mqtt message every 60 seconds 
      */
