@@ -8,14 +8,15 @@
     "email" : "dev@kjeholt.se",
     "url" : "http://www-dev.kjeholt.se"
   },
-  "main" : "./js/main.js",
+  "main" : "./js/TestWrapper.js",
   "contributors" : [ ],
   "dependencies" : {
     "mqtt" : "1.7.3",
     "mysql" : "2.10.2"
   },
   "scripts" : {
-    "start" : "node TestWrapper.js"
+    "start" : "node js/main.js",
+    "debug" : "node js/TestWrapper.js"
   },
   "bugs" : {
     "url" : "null"

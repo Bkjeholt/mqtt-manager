@@ -11,6 +11,9 @@
  Author     : Bjorn Kjeholt
  *************************************************************************/
 
+/*
+ *  
+ */
 var checkCalcSet = function (calcName, body, db, callback) {
     db.query("CALL `store_calc_active`('" + calcName + "',FALSE)",
             function(err,rows) {
@@ -21,63 +24,56 @@ var checkCalcSet = function (calcName, body, db, callback) {
                     console.log("Error: StoreCalcActive");
                 } else {
                     db.query("CALL `store_calc`( '" + calcName + "'," +
-                                               "'" + body.order +"'," +
-                                                               "'" + body.output.agent +"'," +
-                                                               "'" + body.output.node +"'," +
-                                                               "'" + body.output.device +"'," +
-                                                               "'" + body.output.variable + "')", function (err,rows) {
+                                                "'" + body.order +"'," +
+                                                "'" + body.output.agent +"'," +
+                                                "'" + body.output.node +"'," +
+                                                "'" + body.output.device +"'," +
+                                                "'" + body.output.variable + "')", function (err,rows) {
                             var query = "";
                                                                 
                             if (err) {
-                                                console.log("Error: StoreCalcActive");
+                                console.log("Error: StoreCalcActive");
                             } else {
-                                                numberOfOutstandingQueries = numberOfOutstandingQueries-1;
-                            }
-                        });
-                                    
-                                    (function storeCalcInputLoop(i,callback) {
-                                            var query = "";
-                                            if (i > 0) {
-                                                query = "CALL `store_calc_input`( '" + calcName + "'," +
-                                                                                 "'" + body.inputs[i-1].agent +"'," +
-                                                                                 "'" + body.inputs[i-1].node +"'," +
-                                                                                 "'" + body.inputs[i-1].device +"'," +
-                                                                                 "'" + body.inputs[i-1].variable + "')";
-                                                db.query(query, function(err,rows){
-                                                      if (err) {
-                                                          console.log("Store calc input Error: ",err);
-                                                          callback(err);
-                                                      } else {
-                                                          storeCalcInputLoop(i-1,callback);
-                                                      }
-                                                  });
-                                            } else {
-                                                callback(null);
-                                            }
-
-                                        })(body.inputs.length,
-                                            function (err) {
-                                                // All calc inputs are stored in the database
-                                                if (!err) {
-                                                    (function storeCalcParamLoop(i, callback) {
-                                                            var query = "";
-                                                            if (i > 0) {
-                                                                query = "CALL `store_calc_param`('" + calcName + "'," +
-                                                                                                "'" + body.params[i-1].name +"'," +
-                                                                                                "'" + body.params[i-1].value +"')";
-                                                                db.query(query, function(err,rows){
-                                                                        if (err) {
-                                                                            callback(err);
-                                                                            console.log("Error: ");
-                                                                        } else {
-                                                                            storeCalcParamLoop(i-1,callback);
-                                                                        }
-                                                                    });
-                                                            } else {
-                                                                callback(null);
-                                                            }
-                                                    })(body.params.length, 
-                                                        function(err) {
+                                (function storeCalcInputLoop(i,callback) {
+                                        var query = "";
+                                        if (i > 0) {
+                                            query = "CALL `store_calc_input`( '" + calcName + "'," +
+                                                                             "'" + body.inputs[i-1].agent +"'," +
+                                                                             "'" + body.inputs[i-1].node +"'," +
+                                                                             "'" + body.inputs[i-1].device +"'," +
+                                                                             "'" + body.inputs[i-1].variable + "')";
+                                            db.query(query, function(err,rows){
+                                                    if (err) {
+                                                        console.log("Store calc input Error: ",err);
+                                                        callback(err);
+                                                    } else {
+                                                        storeCalcInputLoop(i-1,callback);
+                                                    }
+                                                });
+                                        } else {
+                                            callback(null);
+                                        }
+                                    })(body.inputs.length, function (err) {
+                                            // All calc inputs are stored in the database
+                                            if (!err) {
+                                                (function storeCalcParamLoop(i, callback) {
+                                                        var query = "";
+                                                        if (i > 0) {
+                                                            query = "CALL `store_calc_param`( '" + calcName + "'," +
+                                                                                             "'" + body.params[i-1].name +"'," +
+                                                                                             "'" + body.params[i-1].value +"')";
+                                                            db.query(query, function(err,rows){
+                                                                    if (err) {
+                                                                        callback(err);
+                                                                        console.log("Error: ");
+                                                                    } else {
+                                                                        storeCalcParamLoop(i-1,callback);
+                                                                    }
+                                                                });
+                                                        } else {
+                                                            callback(null);
+                                                        }
+                                                    })(body.params.length, function(err) {
                                                             if (!err) {
                                                                 db.query("CALL `store_calc_active`('" + calcName + "',TRUE)", 
                                                                         function(err,rows) {
@@ -91,11 +87,10 @@ var checkCalcSet = function (calcName, body, db, callback) {
                                                        });
                                                 }
                                             });
-                                              
-                                             
-                                          }
-                                      });
-
+                            }
+                        });
+                }
+            });
 };
 
 var checkCalcRequest = function (calcName, db, callback) {
@@ -144,7 +139,7 @@ var checkCalcRequest = function (calcName, db, callback) {
                                                 topic: {
                                                     group: "calc",
                                                     order: "list",
-                                                    agent: (calcName !== '---')? calcName : undefined },
+                                                    calcname: (calcName !== '---')? calcName : undefined },
                                                 body: resultJson[i-1] });
                                 sendMqttMsg(i-1);
                             }

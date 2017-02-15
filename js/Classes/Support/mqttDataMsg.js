@@ -11,7 +11,7 @@
  Author     : Bjorn Kjeholt
  *************************************************************************/
 
-exports.checkMsg = function(topic,body,db,mqtt) {
+exports.checkMsg = function(topic,body,db,callback) {
     switch(topic.order) {
         case 'present' :
             if (body.data !== undefined) {
@@ -48,14 +48,13 @@ exports.checkMsg = function(topic,body,db,mqtt) {
                                                     /*
                                                      * 
                                                      */
-
-                                                    mqtt.publish({ order: "data",
-                                                                        suborder: "set",
-                                                                        agent: topic.agent,
-                                                                        node: topic.node,
-                                                                        device: topic.device,
-                                                                        variable: topic.variable },
-                                                                      rows[0][0].message_body );
+                                                    callback(null, { topic: { group: "data",
+                                                                              order: "set",
+                                                                              agent: topic.agent,
+                                                                              node: topic.node,
+                                                                              device: topic.device,
+                                                                              variable: topic.variable },
+                                                                     body: rows[0][0].message_body });
 
                                                 } else {
 /*                                                    self.mqtt.publish({ order: "data",

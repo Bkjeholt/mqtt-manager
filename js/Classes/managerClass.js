@@ -58,13 +58,31 @@ managerClass = function(ci) {
             if (!err) {
                 switch(topic.group) {
                     case 'data' : 
-                        mqttData.checkMsg(topic,body,self.db,self.mqtt);
+                        mqttData.checkMsg(topic,body,self.db,function(err,msg) {
+                                if (!err) {
+                                    mqtt.publish(msg.topic,msg.body);
+                                } else {
+                                    
+                                }
+                            });
                         break;
                     case 'info' : 
-                        mqttInfo.checkMsg(message);
+                        mqttInfo.checkMsg(topic,body,self.db,function(err,msg) {
+                                if (!err) {
+                                    mqtt.publish(msg.topic,msg.body);                                    
+                                } else {
+                                    
+                                }
+                            });
                         break;
                     case 'calc' : 
-                        mqttCalc.checkMsg(message);
+                        mqttCalc.checkMsg(topic,body,self.db, function(err,msg) {
+                                if (!err) {
+                                    mqtt.publish(msg.topic,msg.body);
+                                } else {
+                                    
+                                }
+                            });
                         break;
                     default:
                         break;

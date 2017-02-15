@@ -115,8 +115,8 @@ mqttHandler = function(ci) {
     };
     
     this.topicJsonToStr = function (topic) {
-        var result = "" + topic.order + "/" + topic.suborder;
-        switch(topic.order) {
+        var result = "" + topic.group + "/" + topic.order;
+        switch(topic.group) {
             case 'calc':
                 result = result + "/" + topic.calcname;
                 break;

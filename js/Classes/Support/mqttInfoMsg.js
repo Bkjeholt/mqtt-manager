@@ -56,6 +56,9 @@ exports.checkMsg = function(topic,body,db,mqtt) {
                         });
                         
             break;
+        case 'request':
+            
+            break;
         default:
             break;
     }
