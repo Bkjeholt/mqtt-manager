@@ -328,7 +328,7 @@ managerClass = function(ci) {
         console.log("ManagerClass: ci=",self.ci);
         console.log("--------------------------------------------------------");
         console.log("ManagerClass: Preparation");
-        self.ci.mqtt.functions.message = self.mqttMessage;        
+        self.ci.mqtt.functions.message = self.mqttSubscribedMessage;        
         console.log("--------------------------------------------------------");
         console.log("ManagerClass: Initiate MQTT sub class");
         self.mqtt = mqttHandler.create(self.ci);
