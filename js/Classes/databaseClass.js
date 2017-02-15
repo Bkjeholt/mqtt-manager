@@ -26,7 +26,7 @@ databaseClass = function (ci) {
                                        database :  self.ci.mysql.scheme });
 
     self.db.on('error', function(err) {
-            console.log(err.code); // 'ER_BAD_DB_ERROR' 
+            console.log("Database create connection: An error has occured ",err); // 'ER_BAD_DB_ERROR' 
             dbConnected = false;
         });
   
@@ -34,31 +34,14 @@ databaseClass = function (ci) {
         
     this.query = function(query, callback) {
 //        console.log("DB query: " + query);
-        (function WaitForDbConnect() {
-            if (!dbConnected) {
-                self.db.connect(function(err) {
-                    if (err) {
-                        console.error('error connecting: ' + err.stack);
-                        setTimeout(function() {
-                            WaitForDbConnect();
-                        },1000);
-                    } else {
-                        console.log('connected as id ' + self.db.threadId);
-                        dbConnected = true;
-                        WaitForDbConnect();
-                    }
-                });
-            } else {
-                self.db.query(query, function(err,rows) {
-                    if (!err) {
-                        callback(null, rows);
-                    } else {
-                        callback(err,null);
-                    }
-                });
-            }
-        })();
-        
+
+        self.db.query(query, function(err,rows) {
+                if (!err) {
+                    callback(null, rows);
+                } else {
+                    callback(err,null);
+                }
+            });
     };
     
     this.store_info_variable = function(header,body,callback) {
@@ -105,12 +88,30 @@ databaseClass = function (ci) {
         
     };
     
+    this.connected = function() {
+        return dbConnected;
+    };
+    
+    this.setup = function(callback) {
+        self.db.connect(function(err) {
+                if (err) {
+                    console.error('error connecting: ' + err.stack);
+                    callback(err);
+                } else {
+                    console.log('connected as id ' + self.db.threadId);
+                    dbConnected = true;
+                    callback(null);
+                }
+        });
+    };
+    
     setInterval(function() {
         if (dbConnected) {
             self.db.ping(function (err) {
                 if (err) {
                     console.log("Error during ping of db server",err);
                     dbConnected = false;
+                  
                 } else {
                     console.log('Server responded to ping');
                 }

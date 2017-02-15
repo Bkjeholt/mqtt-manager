@@ -20,6 +20,8 @@ var configInfo = {  config: {
                         docker: {
                             image: process.env.DOCKER_IMAGE_NAME,
                             image_tag: process.env.DOCKER_IMAGE_TAG,
+                            base_image: process.env.DOCKER_BASE_IMAGE_NAME,
+                            base_image_tag: process.env.DOCKER_BASE_IMAGE_TAG,
                             container: process.env.DOCKER_CONTAINER_NAME } },
                     health_check: {
                          port_no: 3000,
@@ -29,7 +31,8 @@ var configInfo = {  config: {
                         port_no: (process.env.MYSQL_PORT_NO !== undefined)? process.env.MYSQL_PORT_NO : process.env.MYSQL_PORT_3306_TCP_PORT,  // "3306"
                         user:    "root",
                         passw:   process.env.MYSQL_ENV_MYSQL_ROOT_PASSWORD,
-                        scheme:  process.env.MYSQL_ENV_MYSQL_DATABASE }, // "hic-v2"
+                        scheme:  process.env.MYSQL_ENV_MYSQL_DATABASE, 
+                        connected: false  },
                     mqtt: {
                         ip_addr: (process.env.MQTT_IP_ADDR !== undefined)? process.env.MQTT_IP_ADDR : process.env.MQTT_PORT_1883_TCP_ADDR,   // "192.168.1.10"
                         port_no: (process.env.MQTT_PORT_NO !== undefined)? process.env.MQTT_PORT_NO : process.env.MQTT_PORT_1883_TCP_PORT,   // "1883"
