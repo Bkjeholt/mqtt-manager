@@ -92,6 +92,69 @@ databaseClass = function (ci) {
         return dbConnected;
     };
     
+    this.checkPublishData = function (callback) {
+        var query = "SELECT `DataPublishId`,\
+                            `DataTime`,\
+                            FROM_UNIXTIME(`DataTime`) AS `FullTime`,\
+                            `DataValue`,\
+                            `TopicAddress` FROM `list_all_unpublished_data`";
+        
+        if (self.connected()) {
+            self.db.query(query, function(err, rows) {
+                    var rowIndex = 0;
+                    var queryDeleteMessage = "";
+            
+                    var topicJson;
+  
+                    var msgString= "";
+  //                var msgPayloadJson = {};
+            
+                    if (!err) {
+                        for (rowIndex = 0; rowIndex < rows.length; rowIndex = rowIndex + 1) {
+                            topicArray = rows[rowIndex].TopicAddress.split("/");
+
+                            callback(null,{topic: { group: "data",
+                                                    order: "set",
+                                                    agent: topicArray[0],
+                                                    node: topicArray[1],
+                                                    device: topicArray[2],
+                                                    variable: topicArray[3] },
+                                            body: { time: rows[rowIndex].DataTime,
+                                                    date: rows[rowIndex].FullTime,
+                                                    data: rows[rowIndex].DataValue}});
+                            
+                            queryDeleteMessage = "DELETE FROM `data_publish` WHERE `id`='" + rows[rowIndex].DataPublishId + "'";
+                            self.db.query(queryDeleteMessage, function(err,rows) {
+                                    if (err) {
+                                        console.log("Not possible to remove row with index ="+ rows[rowIndex].DataPublishId + " from table data_publish");
+                                    } 
+                                });
+                        }
+                    } else {
+                        console.log("ERROR db access", query);
+                        callback(null, { topic: { group: "error",
+                                                  order: "report",
+                                                  agent: "mqtt-manager",
+                                                  node: "sev-error" },
+                                         body: { time: (Math.floor(new Date()/1000)),
+                                                 code: 1010,
+                                                 desc: "Error during Database query",
+                                                 info: err }});
+                    }
+                });
+        } else {
+            // DB not connected
+            callback(null, { topic: { group: "error",
+                                      order: "report",
+                                      agent: "mqtt-manager",
+                                      node: "sev-warning" },
+                             body: { time: (Math.floor(new Date()/1000)),
+                                     code: 1020,
+                                     desc: "Database not connected",
+                                     info: err }});
+        }
+    };
+    
     this.setup = function(callback) {
         self.db.connect(function(err) {
                 if (err) {
