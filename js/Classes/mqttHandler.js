@@ -190,6 +190,10 @@ mqttHandler = function(ci) {
 
     };
     
+    this.connected = function () {
+        return self.ci.mqtt.connected;
+    };
+    
     (function() {
         mqttClient.on('close',(self.disconnect));
         mqttClient.on('message',(self.ci.mqtt.functions.message));

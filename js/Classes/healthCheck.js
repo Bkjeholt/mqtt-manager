@@ -1,13 +1,13 @@
 /************************************************************************
  Product    : Home information and control
- Date       : 2016-12-16
- Copyright  : Copyright (C) 2016 Kjeholt Engineering. All rights reserved.
+ Date       : 2017-02-16
+ Copyright  : Copyright (C) 2017 Kjeholt Engineering. All rights reserved.
  Contact    : dev@kjeholt.se
  Url        : http://www-dev.kjeholt.se
  Licence    : ---
  ---------------------------------------------------------
- File       : mqtt-agent-onewire/js/classes/healthCheck.js
- Version    : 0.1.0
+ File       : mqtt-manager/js/Classes/healthCheck.js
+ Version    : 0.2.0
  Author     : Bjorn Kjeholt
  *************************************************************************/
 
@@ -30,7 +30,8 @@ var healthCheck = function (configInfo) {
                                 healthCheckLoop(index-1,callbackLoop);
                             } else {
                                 callbackLoop({ error:"non-healthy",
-                                               test_number:index-1 });
+                                               test_number:index-1,
+                                               info: err });
                             }
                         });
                     
@@ -59,7 +60,8 @@ var healthCheck = function (configInfo) {
                 } else {
                     response.writeHead(500,{"Content-Type": "text/plain"});
                     response.end("Health status is not OK\n" +
-                                 "Test number " + err.test_number + " failed\n");                       
+                                 "Test number " + err.test_number + " failed\n" +
+                                 "Error info " + JSON.stringify(err) + "");                       
                 }
             });
     });

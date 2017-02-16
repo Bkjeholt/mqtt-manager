@@ -1,13 +1,13 @@
 /************************************************************************
  Product    : Home information and control
- Date       : 2016-11-11
- Copyright  : Copyright (C) 2016 Kjeholt Engineering. All rights reserved.
+ Date       : 2017-02-15
+ Copyright  : Copyright (C) 2017 Kjeholt Engineering. All rights reserved.
  Contact    : dev@kjeholt.se
  Url        : http://www-dev.kjeholt.se
  Licence    : ---
  ---------------------------------------------------------
  File       : TBD.js
- Version    : 0.2.1
+ Version    : 0.7.1
  Author     : Bjorn Kjeholt
  ---------------------------------------------------------
  
@@ -33,7 +33,7 @@ managerClass = function(ci) {
                     case 'data' : 
                         mqttData.checkMsg(topic,body,self.db,function(err,msg) {
                                 if (!err) {
-                                    mqtt.publish(msg.topic,msg.body);
+                                    self.mqtt.publish(msg.topic,msg.body);
                                 } else {
                                     
                                 }
@@ -42,7 +42,7 @@ managerClass = function(ci) {
                     case 'info' : 
                         mqttInfo.checkMsg(topic,body,self.db,function(err,msg) {
                                 if (!err) {
-                                    mqtt.publish(msg.topic,msg.body);                                    
+                                    self.mqtt.publish(msg.topic,msg.body);                                    
                                 } else {
                                     
                                 }
@@ -51,7 +51,7 @@ managerClass = function(ci) {
                     case 'calc' : 
                         mqttCalc.checkMsg(topic,body,self.db, function(err,msg) {
                                 if (!err) {
-                                    mqtt.publish(msg.topic,msg.body);
+                                    self.mqtt.publish(msg.topic,msg.body);
                                 } else {
                                     
                                 }
@@ -64,6 +64,26 @@ managerClass = function(ci) {
         });
     };
     
+    this.healthCheck_db = function(callback) {
+        if (self.db)
+            if (self.db.connected()){
+            callback(null);
+        } else {
+            callback({ error: "non-healthy",
+                       info: "The database is not connected" });            
+        }
+    };
+    
+    this.healthCheck_mqtt = function(callback) {
+        if (self.db)
+            if (self.mqtt.connected()){
+            callback(null);
+        } else {
+            callback({ error: "non-healthy",
+                       info: "The mqtt broker is not connected" });            
+        }
+    };
+    
     this.setup = function () {
         console.log("--------------------------------------------------------");
         console.log("Docker container name:  " + self.ci.config.name);
@@ -73,7 +93,9 @@ managerClass = function(ci) {
         console.log("Docker base image tag:  " + self.ci.config.docker.base_image_tag);
         console.log("--------------------------------------------------------");        
         console.log("ManagerClass: Preparation");
-        self.ci.mqtt.functions.message = self.mqttSubscribedMessage;        
+        self.ci.mqtt.functions.message = self.mqttSubscribedMessage; 
+        self.ci.health_check.check_functions.push(self.healthCheck_db);
+        self.ci.health_check.check_functions.push(self.healthCheck_mqtt);
         console.log("--------------------------------------------------------");
         console.log("ManagerClass: Initiate Database sub class");
         self.db = databaseClass.create(self.ci);
@@ -119,53 +141,24 @@ managerClass = function(ci) {
     },60000);
     
     /*
-     * Check for data to be published
+     * Check for data to be published every 1 second.
      */
-    setInterval(function() {
-        var query = "SELECT `DataPublishId`,\
-                            `DataTime`,\
-                            FROM_UNIXTIME(`DataTime`) AS `FullTime`,\
-                            `DataValue`,\
-                            `TopicAddress` FROM `list_all_unpublished_data`";
-        
+    setInterval(function() {        
         if (self.db) 
-            if (self.db.connected())
-        self.db.query(query, function(err, rows) {
-            var rowIndex = 0;
-            var queryDeleteMessage = "";
-            
-            var topicJson;;
-  
-            var msgString= "";
-  //          var msgPayloadJson = {};
-            
-            if (!err) {
-                for (rowIndex = 0; rowIndex < rows.length; rowIndex = rowIndex + 1) {
-                    topicArray = rows[rowIndex].TopicAddress.split("/");
-
-                    self.mqtt.publish({ order: "data",
-                                        suborder: "set",
-                                        agent: topicArray[0],
-                                        node: topicArray[1],
-                                        device: topicArray[2],
-                                        variable: topicArray[3] },
-                                      { time: rows[rowIndex].DataTime,
-                                        date: rows[rowIndex].FullTime,
-                                        data: rows[rowIndex].DataValue });
-                    
-                    queryDeleteMessage = "DELETE FROM `data_publish` WHERE `id`='" + rows[rowIndex].DataPublishId + "'";
-                    self.db.query(queryDeleteMessage, function(err,rows) {
-                        if (err) {
-                            console.log("Not possible to remove row with index ="+ rows[rowIndex].DataPublishId + " from table data_publish");
-                        } 
-                   });
-                   
-               }
-           } else {
-               console.log("ERROR db access", query);
-           }
-        });
-    }, 2000);
+            self.db.checkPublishData(function(err, msg) {
+                if (!err) {
+                    self.mqtt.publish(msg.topic,msg.body);
+                } else {
+                    self.mqtt.publish({ group: "error",
+                                        order: "report",
+                                        agent: "---" },
+                                      { time: (Math.floor(new Date()/1000)),
+                                        code: 1020,
+                                        desc: "Fault during execution of db.checkPublishData",
+                                        info: err });
+                }
+            });
+    }, 1000);
 };
 
 exports.create = function(ci) {
