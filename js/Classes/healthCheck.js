@@ -44,7 +44,7 @@ var healthCheck = function (configInfo) {
                        self.ci.health_check.status = "ok";
                        callback(null);
                    } else {
-                       self.ci.health_check.status = "Failing! In test number " + err.test_number;
+                       self.ci.health_check.status = "Failing! In test number " + err.test_number + " Err-info: "+JSON.stringify(err);
                        callback(err);
                    }
                });

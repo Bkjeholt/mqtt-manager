@@ -65,22 +65,26 @@ managerClass = function(ci) {
     };
     
     this.healthCheck_db = function(callback) {
-        if (self.db)
+        if (self.db) {
             if (self.db.connected()){
-            callback(null);
+                callback(null);
+            } else {
+                callback({ error: "non-healthy",
+                           info: "The database is not connected" });            
+            }
         } else {
             callback({ error: "non-healthy",
-                       info: "The database is not connected" });            
+                       info: "The database object is available" });            
+            
         }
     };
     
     this.healthCheck_mqtt = function(callback) {
-        if (self.db)
-            if (self.mqtt.connected()){
+        if (self.mqtt.connected()){
             callback(null);
         } else {
             callback({ error: "non-healthy",
-                       info: "The mqtt broker is not connected" });            
+                       info: "The mqtt broker is not connected", });            
         }
     };
     
@@ -103,7 +107,7 @@ managerClass = function(ci) {
         (function dbSetupLoop(callback) {
                 self.db.setup(function(err) {
                         if (err) {
-                            console.log("Problem with connecting to the database, retry in a second", err);
+                            console.error("Problem with connecting to the database, retry in a second", err);
     
                             setTimeout(function() {
                                     dbSetupLoop(callback);
