@@ -84,7 +84,8 @@ managerClass = function(ci) {
             callback(null);
         } else {
             callback({ error: "non-healthy",
-                       info: "The mqtt broker is not connected", });            
+                       info: "The mqtt broker is not connected", 
+                       conn: JSON.stringify(self.ci.mqtt)});            
         }
     };
     

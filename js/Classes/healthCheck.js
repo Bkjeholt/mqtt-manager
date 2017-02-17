@@ -23,7 +23,7 @@ var healthCheck = function (configInfo) {
         
         (function healthCheckLoop(index,callbackLoop) {
                 if (index > 0) {
-                    console.log("Health check number " + (index-1));
+//                    console.log("Health check number " + (index-1));
                     
                     (self.ci.health_check.check_functions[index-1])(function(err) {
                             if (!err) {
@@ -52,7 +52,7 @@ var healthCheck = function (configInfo) {
     };
     
     var server = healthCheckWeb.createServer(function(request,response) {
-        console.log("HC received:", self.ci.health_check);
+//        console.log("HC received:", self.ci.health_check);
         checkAllHealthyFunctions(function(err) {
                 if (!err) {
                     response.writeHead(200,{"Content-Type": "text/plain"});
