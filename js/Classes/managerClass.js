@@ -16,6 +16,8 @@
 var mqttHandler = require('./mqttHandler');
 var databaseClass = require('./databaseClass');
 
+var exec = require('child_process').exec;
+
 var mqttData= require('./Support/mqttDataMsg');
 var mqttInfo= require('./Support/mqttInfoMsg');
 var mqttCalc= require('./Support/mqttCalcMsg');
@@ -115,7 +117,14 @@ managerClass = function(ci) {
                                 },1000);
 
                         } else {
-                            callback(null);
+                            exec("sh /usr/src/app/script/mysql-setup.sh",function(err,stdout,stderr) {
+                                if (!err) {
+                                    callback(null);
+                                } else {
+                                    console.error("Failing running the mysql-setups script err" ,err);
+                                    callback(err);
+                                }
+                            });                            
                         }
                     });
             })(function (err) {
