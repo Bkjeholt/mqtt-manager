@@ -15,7 +15,7 @@ FROM bkjeholt/base-nodejs:latest-rpi
 
 MAINTAINER Björn Kjeholt <dev@kjeholt.se>
 
-RUN apt-get -y install mysql-client
+RUN apk add mysql-client
 
 ARG DOCKER_IMAGE_NAME
 ARG DOCKER_IMAGE_TAG
