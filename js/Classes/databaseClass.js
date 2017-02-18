@@ -150,8 +150,7 @@ databaseClass = function (ci) {
                                       node: "sev-warning" },
                              body: { time: (Math.floor(new Date()/1000)),
                                      code: 1020,
-                                     desc: "Database not connected",
-                                     info: err }});
+                                     desc: "Database not connected" }});
         }
     };
     
