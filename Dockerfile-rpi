@@ -15,7 +15,8 @@ FROM bkjeholt/base-nodejs:latest-rpi
 
 MAINTAINER Björn Kjeholt <dev@kjeholt.se>
 
-RUN apk add mysql-client
+RUN apk update && \
+    apk add mysql-client
 
 ARG DOCKER_IMAGE_NAME
 ARG DOCKER_IMAGE_TAG
