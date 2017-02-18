@@ -158,7 +158,7 @@ managerClass = function(ci) {
      * Check for data to be published every 1 second.
      */
     setInterval(function() {        
-        if (self.db) 
+        if ((self.db) && (self.mqtt)) 
             self.db.checkPublishData(function(err, msg) {
                 if (!err) {
                     self.mqtt.publish(msg.topic,msg.body);
