@@ -82,12 +82,19 @@ managerClass = function(ci) {
     };
     
     this.healthCheck_mqtt = function(callback) {
-        if (self.mqtt.connected()){
-            callback(null);
+        if (self.mqtt) {
+            if (self.mqtt.connected()){
+                callback(null);
+            } else {
+                callback({ error: "non-healthy",
+                           info: "The mqtt broker is not connected", 
+                           conn: JSON.stringify(self.ci.mqtt)});            
+            }
         } else {
             callback({ error: "non-healthy",
-                       info: "The mqtt broker is not connected", 
+                       info: "The link to the mqtt broker is not created", 
                        conn: JSON.stringify(self.ci.mqtt)});            
+            
         }
     };
     
