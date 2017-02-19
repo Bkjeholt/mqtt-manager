@@ -117,11 +117,11 @@ managerClass = function(ci) {
         (function dbSetupLoop(callback) {
                 self.db.setup(function(err) {
                         if (err) {
-                            console.error("Problem with connecting to the database, retry in a second", err);
+                            console.error("Problem with connecting to the database, retry in a second");
     
                             setTimeout(function() {
                                     dbSetupLoop(callback);
-                                },1000);
+                                },5000);
 
                         } else {
                             exec("/usr/src/app/script/mysql-setup.sh",function(err,stdout,stderr) {
