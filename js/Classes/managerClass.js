@@ -124,7 +124,7 @@ managerClass = function(ci) {
                                 },1000);
 
                         } else {
-                            exec("bash /usr/src/app/script/mysql-setup.sh",function(err,stdout,stderr) {
+                            exec("/usr/src/app/script/mysql-setup.sh",function(err,stdout,stderr) {
                                 if (!err) {
                                     callback(null);
                                 } else {
