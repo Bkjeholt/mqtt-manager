@@ -25,7 +25,7 @@ databaseClass = function (ci) {
                                        password :  self.ci.mysql.passw,
                                        database :  self.ci.mysql.scheme });
 
-    self.db.on('error', function(err) {
+    this.db.on('error', function(err) {
             console.log("Database create connection: An error has occured ",err); // 'ER_BAD_DB_ERROR' 
             dbConnected = false;
         });
@@ -155,16 +155,29 @@ databaseClass = function (ci) {
     };
     
     this.setup = function(callback) {
-        self.db.connect(function(err) {
-                if (err) {
-                    console.error('error connecting: ' + err.stack);
-                    callback(err);
-                } else {
-                    console.log('connected as id ' + self.db.threadId);
-                    dbConnected = true;
-                    callback(null);
-                }
-        });
+        var callbackResponse = null;
+        try {
+                self.db.connect(function(err) {
+                    if (err) {
+                        throw { error: "DB Error connecting",
+                                info: err };
+                        dbConnected = false;
+//                        console.error('error connecting: ' + err.stack);
+                    } else {
+                        console.error("DB Connected as id=" + self.db.threadId);
+                        dbConnected = true;
+                        callback(null);
+                    }
+                });
+            }
+        catch(err) {
+            console.log("DB failing setup");
+            dbConnected = false;
+                callbackResponse = err;
+        }
+        finally {
+                callback(callbackResponse);
+        }
     };
     
     setInterval(function() {
