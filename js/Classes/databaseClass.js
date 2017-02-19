@@ -159,21 +159,21 @@ databaseClass = function (ci) {
         try {
                 self.db.connect(function(err) {
                     if (err) {
-                        throw { error: "DB Error connecting",
-                                info: err };
+                        callbackResponse = { error: "DB Error connecting",
+                                             info: err };
                         dbConnected = false;
 //                        console.error('error connecting: ' + err.stack);
                     } else {
                         console.error("DB Connected as id=" + self.db.threadId);
                         dbConnected = true;
-                        callback(null);
                     }
                 });
             }
         catch(err) {
             console.log("DB failing setup");
             dbConnected = false;
-                callbackResponse = err;
+            callbackResponse = { error: "DB failing setup",
+                                 info: err };
         }
         finally {
                 callback(callbackResponse);
