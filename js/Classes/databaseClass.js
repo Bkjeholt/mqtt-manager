@@ -155,6 +155,11 @@ databaseClass = function (ci) {
     };
     
     this.setup = function(callback) {
+        self.db = mysql.createConnection({ host     : self.ci.mysql.ip_addr,
+                                           user     :  self.ci.mysql.user,
+                                           password :  self.ci.mysql.passw,
+                                           database :  self.ci.mysql.scheme });
+        
         try {
                 self.db.connect(function(err) {
                     if (err) {
