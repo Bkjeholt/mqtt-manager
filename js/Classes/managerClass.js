@@ -158,7 +158,7 @@ managerClass = function(ci) {
                             time: (Math.floor(new Date()/1000))
                         };
         
-        self.mqtt.sendStatus(msgStatus.toString());
+        if (self.mqtt) self.mqtt.sendStatus(msgStatus.toString());
     },60000);
     
     /*
