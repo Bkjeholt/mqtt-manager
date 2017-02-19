@@ -16,7 +16,7 @@ FROM bkjeholt/base-nodejs:latest-x86
 MAINTAINER Björn Kjeholt <dev@kjeholt.se>
 
 RUN apk update && \
-    apk add mysql-client
+    apk add mysql-client bash
 
 ARG DOCKER_IMAGE_NAME
 ARG DOCKER_IMAGE_TAG
