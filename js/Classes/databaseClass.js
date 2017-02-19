@@ -155,28 +155,25 @@ databaseClass = function (ci) {
     };
     
     this.setup = function(callback) {
-        var callbackResponse = null;
         try {
                 self.db.connect(function(err) {
                     if (err) {
-                        callbackResponse = { error: "DB Error connecting",
-                                             info: err };
                         dbConnected = false;
+                        callback({ error: "DB Error connecting",
+                                   info: err });
 //                        console.error('error connecting: ' + err.stack);
                     } else {
-                        console.error("DB Connected as id=" + self.db.threadId);
+                        console.log("DB Connected as id=" + self.db.threadId);
                         dbConnected = true;
+                        callback(null);
                     }
                 });
             }
         catch(err) {
             console.log("DB failing setup");
             dbConnected = false;
-            callbackResponse = { error: "DB failing setup",
-                                 info: err };
-        }
-        finally {
-                callback(callbackResponse);
+            callback({ error: "DB failing setup",
+                       info: err });
         }
     };
     
