@@ -11,6 +11,7 @@
  Author     : Bjorn Kjeholt
  *************************************************************************/
 
+var waitForPort = require('wait-for-port');
 var mysql = require('mysql');
 
 databaseClass = function (ci) {
@@ -155,31 +156,30 @@ databaseClass = function (ci) {
     };
     
     this.setup = function(callback) {
-        self.db = mysql.createConnection({ host     : self.ci.mysql.ip_addr,
-                                           user     :  self.ci.mysql.user,
-                                           password :  self.ci.mysql.passw,
-                                           database :  self.ci.mysql.scheme });
-        
-        try {
-                self.db.connect(function(err) {
-                    if (err) {
-                        dbConnected = false;
-                        callback({ error: "DB Error connecting",
-                                   info: err });
-//                        console.error('error connecting: ' + err.stack);
-                    } else {
-                        console.log("DB Connected as id=" + self.db.threadId);
-                        dbConnected = true;
-                        callback(null);
-                    }
-                });
-            }
-        catch(err) {
-            console.log("DB failing setup");
-            dbConnected = false;
-            callback({ error: "DB failing setup",
-                       info: err });
-        }
+     
+        waitForPort(self.ci.mysql.ip_addr, self.ci.mysql.port_no, function(err) {
+                if (!err) { 
+                    self.db = mysql.createConnection({ host     : self.ci.mysql.ip_addr,
+                                                       user     :  self.ci.mysql.user,
+                                                       password :  self.ci.mysql.passw,
+                                                       database :  self.ci.mysql.scheme });
+                    self.db.connect(function(err) {
+                            if (err) {
+                                dbConnected = false;
+                                callback({ error: "DB Error connecting",
+                                           info: err });
+//                              console.error('error connecting: ' + err.stack);
+                            } else {
+                                console.log("DB Connected as id=" + self.db.threadId);
+                                dbConnected = true;
+                                callback(null);
+                            }
+                        });
+                } else {
+                    callback({ error: "DB Waiting for available port failing",
+                               info: err });
+                }
+            });
     };
     
     setInterval(function() {
