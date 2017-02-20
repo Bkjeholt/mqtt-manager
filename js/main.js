@@ -1,13 +1,13 @@
 /************************************************************************
  Product    : Home information and control
- Date       : 2016-06-21
- Copyright  : Copyright (C) 2016 Kjeholt Engineering. All rights reserved.
+ Date       : 2017-02-20
+ Copyright  : Copyright (C) 2017 Kjeholt Engineering. All rights reserved.
  Contact    : dev@kjeholt.se
  Url        : http://www-dev.kjeholt.se
  Licence    : ---
  -------------------------------------------------------------------------
  File       : MqttManager/main.js
- Version    : See below
+ Version    : 0.7.1
  Author     : Bjorn Kjeholt
  *************************************************************************/
 
@@ -29,9 +29,9 @@ var configInfo = {  config: {
                     mysql: { 
                         ip_addr: (process.env.MYSQL_IP_ADDR !== undefined)? process.env.MYSQL_IP_ADDR : process.env.MYSQL_PORT_3306_TCP_ADDR,  // "192.168.1.10"
                         port_no: (process.env.MYSQL_PORT_NO !== undefined)? process.env.MYSQL_PORT_NO : process.env.MYSQL_PORT_3306_TCP_PORT,  // "3306"
-                        user:    "root",
-                        passw:   process.env.MYSQL_ENV_MYSQL_ROOT_PASSWORD,
-                        scheme:  process.env.MYSQL_ENV_MYSQL_DATABASE, 
+                        user:    (process.env.MYSQL_USER !== undefined)? process.env.MYSQL_USER : "root",
+                        passw:   (process.env.MYSQL_PASSWORD !== undefined)? process.env.MYSQL_PASSWORD : process.env.MYSQL_ENV_MYSQL_ROOT_PASSWORD,
+                        scheme:  (process.env.MYSQL_DATABASE !== undefined)? process.env.MYSQL_DATABASE : process.env.MYSQL_ENV_MYSQL_DATABASE, 
                         connected: false  },
                     mqtt: {
                         ip_addr: (process.env.MQTT_IP_ADDR !== undefined)? process.env.MQTT_IP_ADDR : process.env.MQTT_PORT_1883_TCP_ADDR,   // "192.168.1.10"
