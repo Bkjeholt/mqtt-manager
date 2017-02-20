@@ -1,13 +1,13 @@
 /************************************************************************
  Product    : Home information and control
- Date       : 2016-12-01
- Copyright  : Copyright (C) 2016 Kjeholt Engineering. All rights reserved.
+ Date       : 2017-02-20
+ Copyright  : Copyright (C) 2017 Kjeholt Engineering. All rights reserved.
  Contact    : dev@kjeholt.se
  Url        : http://www-dev.kjeholt.se
  Licence    : ---
  -------------------------------------------------------------------------
  File       : agent_body.js
- Version    : 0.2.1
+ Version    : 0.3.1
  Author     : Bjorn Kjeholt
  *************************************************************************/
 
@@ -22,6 +22,7 @@ databaseClass = function (ci) {
     var dbPopulated = false;
     
     this.db = mysql.createConnection({ host     : self.ci.mysql.ip_addr,
+                                       port     : self.ci.mysql.port_no,
                                        user     :  self.ci.mysql.user,
                                        password :  self.ci.mysql.passw,
                                        database :  self.ci.mysql.scheme });
