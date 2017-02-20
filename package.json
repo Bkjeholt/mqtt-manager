@@ -12,7 +12,8 @@
   "contributors" : [ ],
   "dependencies" : {
     "mqtt" : "1.7.3",
-    "mysql" : "2.10.2"
+    "mysql" : "2.10.2",
+    "wait-for-port":"0.0.2"
   },
   "scripts" : {
     "start" : "node js/main.js",
