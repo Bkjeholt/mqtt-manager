@@ -20,7 +20,8 @@ databaseClass = function (ci) {
     
     var dbConnected = false;
     var dbPopulated = false;
-    
+
+    /*
     this.db = mysql.createConnection({ host     : self.ci.mysql.ip_addr,
                                        port     : self.ci.mysql.port_no,
                                        user     :  self.ci.mysql.user,
@@ -31,7 +32,7 @@ databaseClass = function (ci) {
             console.log("Database create connection: An error has occured ",err); // 'ER_BAD_DB_ERROR' 
             dbConnected = false;
         });
-  
+*/
 //    console.log("DB ci",self.ci);
         
     this.query = function(query, callback) {
@@ -157,10 +158,12 @@ databaseClass = function (ci) {
     };
     
     this.setup = function(callback) {
-     
+        console.log("MQTT-MANAGER: Entering the db wait loop. IP-addr="+self.ci.mysql.ip_addr+":"+self.ci.mysql.port_no);
         waitForPort(self.ci.mysql.ip_addr, self.ci.mysql.port_no, function(err) {
+                console.log("MQTT-MANAGER: Leaving the db wait loop err=",err,"<<<<>>>>");
                 if (!err) { 
                     self.db = mysql.createConnection({ host     : self.ci.mysql.ip_addr,
+                                                       port     : self.ci.mysql.port_no,
                                                        user     :  self.ci.mysql.user,
                                                        password :  self.ci.mysql.passw,
                                                        database :  self.ci.mysql.scheme });
