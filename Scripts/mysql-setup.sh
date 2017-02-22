@@ -14,6 +14,13 @@
 
 SQL_ROOT_PATH=/usr/src/app/script/sql/
 
+SQL_HOST=${1}
+SQL_PORT=${2}
+SQL_USER=${3}
+SQL_PASSWORD=${4}
+SQL_DATABASE=${5}
+
+
 SQL_SETUP_TABLES_FILE_PATH=create-tables-v1.0.sql
 SQL_SETUP_PROCEDURES_FILE_PATH=create-procedures-v1.0.sql
 SQL_SETUP_FUNCTIONS_FILE_PATH=create-functions-v1.0.sql
@@ -27,11 +34,11 @@ function CreateDbInfo() {
     echo " SQL File:   ${SQL_FILE_PATH} "
     echo " "
 
-    mysql --user=${MYSQL_USER} \
-          --password=${MYSQL_PASSWORD} \
-          --host=${MYSQL_IP_ADDR} \
-          --port=${MYSQL_PORT_NO} \
-          ${MYSQL_DATABASE} < ${SQL_FILE_PATH}
+    mysql --user=${SQL_USER} \
+          --password=${SQL_PASSWORD} \
+          --host=${SQL_HOST} \
+          --port=${SQL_PORT} \
+          ${SQL_DATABASE} < ${SQL_FILE_PATH}
 }
 
  

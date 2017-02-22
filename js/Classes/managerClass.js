@@ -116,6 +116,7 @@ managerClass = function(ci) {
         
         (function dbSetupLoop(callback) {
                 self.db.setup(function(err) {
+                        var dbSetupCommand = "";
                         if (err) {
                             console.log("Problem with connecting to the database, retry in a second");
     
@@ -124,8 +125,14 @@ managerClass = function(ci) {
                                 },5000);
 
                         } else {
-                            console.log("Database connected, execute script");
-                            exec("/usr/src/app/script/mysql-setup.sh",function(err,stdout,stderr) {
+                            dbSetupCommand = "/usr/src/app/script/mysql-setup.sh " + 
+                                             self.ci.mysql.ip_addr + " " +
+                                             self.ci.mysql.port_no + " " +
+                                             self.ci.mysql.user + " " +
+                                             self.ci.mysql.passw + " " +
+                                             self.ci.mysql.scheme;
+                            console.log("Database connected, execute script: " + dbSetupCommand);
+                            exec(dbSetupCommand,function(err,stdout,stderr) {
                                 if (!err) {
                                     console.log("Database tables,views and stored procedures are updated");
                                     console.log("Stdout:",stdout);
