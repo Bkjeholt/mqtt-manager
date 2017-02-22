@@ -16,8 +16,10 @@ SQL_ROOT_PATH=/usr/src/app/script/sql/
 
 SQL_HOST=${1}
 SQL_PORT=${2}
-SQL_USER=${3}
-SQL_PASSWORD=${4}
+# SQL_USER=${3}
+# SQL_PASSWORD=${4}
+SQL_USER=root
+SQL_PASSWORD=hic
 SQL_DATABASE=${5}
 
 
