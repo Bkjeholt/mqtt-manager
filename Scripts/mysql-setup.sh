@@ -16,12 +16,9 @@ SQL_ROOT_PATH=/usr/src/app/script/sql/
 
 SQL_HOST=${1}
 SQL_PORT=${2}
-# SQL_USER=${3}
-# SQL_PASSWORD=${4}
-SQL_USER=root
-SQL_PASSWORD=hic
+SQL_USER=${3}
+SQL_PASSWORD=${4}
 SQL_DATABASE=${5}
-
 
 SQL_SETUP_TABLES_FILE_PATH=create-tables-v1.0.sql
 SQL_SETUP_PROCEDURES_FILE_PATH=create-procedures-v1.0.sql
