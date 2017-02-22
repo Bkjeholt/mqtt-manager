@@ -11,7 +11,7 @@
 # Author     : Bjorn Kjeholt
 # *************************************************************************
  
-FROM bkjeholt/base-nodejs:latest-rpi
+FROM bkjeholt/base-nodejs:dev-rpi
 
 MAINTAINER Björn Kjeholt <dev@kjeholt.se>
 
