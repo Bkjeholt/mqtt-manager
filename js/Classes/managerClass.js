@@ -124,9 +124,14 @@ managerClass = function(ci) {
                                 },5000);
 
                         } else {
-                            console.log("Database connected");
+                            console.log("Database connected, execute script");
                             exec("/usr/src/app/script/mysql-setup.sh",function(err,stdout,stderr) {
                                 if (!err) {
+                                    console.log("Database tables,views and stored procedures are updated");
+                                    console.log("Stdout:",stdout);
+                                    console.log("-----------------------------------------");
+                                    console.log("stderr:",stderr);
+                                    console.log("-----------------------------------------");
                                     callback(null);
                                 } else {
                                     console.error("Failing running the mysql-setups script err" ,err);
