@@ -32,6 +32,11 @@ function CreateDbInfo() {
     SQL_FILE_PATH=${SQL_ROOT_PATH}${1}
     echo "----------------------------------------------------------------------------------"
     echo " SQL File:   ${SQL_FILE_PATH} "
+    echo "   User:     ${SQL_USER} "
+    echo "   Password: ${SQL_PASSWORD} "
+    echo "   Host:     ${SQL_HOST} "
+    echo "   Port:     ${SQL_PORT} "
+    echo "   Scheme:   ${SQL_DATABASE} "
     echo " "
 
     mysql --user=${SQL_USER} \
