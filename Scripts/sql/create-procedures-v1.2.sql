@@ -1,13 +1,13 @@
 -- *************************************************************************
 -- Product    : Home information and control
--- Date       : 2016-12-01
--- Copyright  : Copyright (C) 2016 Kjeholt Engineering. All rights reserved.
+-- Date       : 2017-02-25
+-- Copyright  : Copyright (C) 2017 Kjeholt Engineering. All rights reserved.
 -- Contact    : dev@kjeholt.se
 -- Url        : http://www-dev.kjeholt.se
 -- Licence    : ---
 -- -------------------------------------------------------------------------
 -- File       : create-procedures.js
--- Version    : 1.1
+-- Version    : 1.2
 -- Author     : Bjorn Kjeholt
 -- *************************************************************************
 
@@ -25,48 +25,48 @@ CREATE DEFINER=`root`@`%` PROCEDURE `__calc_avg`(
 			IN `CalcId` INT,
 			IN `DataTransitionKey` VARCHAR(32))
 BEGIN
-	DECLARE `NumberOfParams` INT; 
-	DECLARE `NumberOfDatas` INT DEFAULT '0'; 
+    DECLARE `NumberOfParams` INT; 
+    DECLARE `NumberOfDatas` INT DEFAULT '0'; 
 
-	DECLARE `CalcInterval` INT; 
-	DECLARE `FromTime` INT; 
-	DECLARE `ToTime` INT; 
+    DECLARE `CalcInterval` INT; 
+    DECLARE `FromTime` INT; 
+    DECLARE `ToTime` INT; 
 
-	DECLARE `CalcAverageValue` FLOAT; 
+    DECLARE `CalcAverageValue` FLOAT; 
 
-	SELECT COUNT(*)
-		INTO `NumberOfParams`
-		FROM `calc_param`
-		WHERE (`calc_id` = `CalcId`) AND
-			  (`name` = 'time'); 
-	INSERT INTO `data_text`(`variable_id`,`time`,`data`)
-					VALUES
-						('-1', UNIX_TIMESTAMP(),CONCAT('Warning: __calc_avg (',`NumberOfDatas`,') Data ->',`NumberOfParams`)); 
+    SELECT COUNT(*)
+	INTO `NumberOfParams`
+	FROM `calc_param`
+	WHERE (`calc_id` = `CalcId`) AND
+              (`name` = 'time'); 
+    INSERT INTO `data_text`(`variable_id`,`time`,`data`)
+	VALUES
+            ('-1', UNIX_TIMESTAMP(),CONCAT('Warning: __calc_avg (',`NumberOfDatas`,') Data ->',`NumberOfParams`)); 
 
-	IF (`NumberOfParams` > '0') THEN
-		SET `ToTime` = (SELECT `modified_time` 
-									FROM `calc_input` 
-									WHERE (`calc_id` = `CalcId`)
-									ORDER BY `id` DESC
-									LIMIT 1); 
+    IF (`NumberOfParams` > '0') THEN
+	SET `ToTime` = (SELECT `modified_time` 
+            FROM `calc_input` 
+            WHERE (`calc_id` = `CalcId`)
+            ORDER BY `id` DESC
+            LIMIT 1); 
 
-		SET `CalcInterval` = (SELECT `value` 
-									FROM `calc_param` 
-									WHERE (`calc_id` = `CalcId`) AND
-										  (`name` = 'time')
-									ORDER BY `id` DESC
-									LIMIT 1); 
+	SET `CalcInterval` = (SELECT `value` 
+            FROM `calc_param` 
+            WHERE (`calc_id` = `CalcId`) AND
+                  (`name` = 'time')
+            ORDER BY `id` DESC
+            LIMIT 1); 
 		
-		SET `FromTime` = `ToTime` - `CalcInterval`; 
+	SET `FromTime` = `ToTime` - `CalcInterval`; 
 
-		SET `NumberOfDatas` = (SELECT COUNT(`data_float`.`id`) 
-								FROM `data_float` ,`calc_input`
-								WHERE (`calc_input`.`calc_id` = `CalcId`) AND
-									  (`data_float`.`variable_id` = `calc_input`.`variable_id`) AND
-									  (`data_float`.`time` > `FromTime`) AND
-									  (`data_float`.`time` <= `ToTime`) ); 
+	SET `NumberOfDatas` = (SELECT COUNT(`data_float`.`id`) 
+            FROM `data_float` ,`calc_input`
+            WHERE (`calc_input`.`calc_id` = `CalcId`) AND
+                  (`data_float`.`variable_id` = `calc_input`.`variable_id`) AND
+		  (`data_float`.`time` > `FromTime`) AND
+		  (`data_float`.`time` <= `ToTime`) ); 
 
-		IF (`NumberOfDatas` > '0') THEN
+	IF (`NumberOfDatas` > '0') THEN
 			SET `CalcAverageValue` = (SELECT AVG(`data_float`.`data`) 
 										FROM `data_float`, `calc_input`
 										WHERE (`calc_input`.`calc_id` = `CalcId`) AND
@@ -252,7 +252,7 @@ INSERT INTO `data_text`(`variable_id`,`time`,`data`)
 				END; 
 			WHEN 'int' THEN
 				BEGIN
-					DECLARE `Data` INT; 
+					DECLARE `Data` BIGINT; 
 
 					SET `Data` = `InputDataValue`; 
 					CALL `__store_data`((SELECT `variable_id` FROM `calc` WHERE (`id` = `CalcId`) LIMIT 1), 
@@ -726,8 +726,8 @@ BEGIN
 	DECLARE `DataCoef` FLOAT DEFAULT '1.0'; 
 	DECLARE `DataOffset` FLOAT DEFAULT '0'; 
 	DECLARE `DeviceType` ENUM ('dynamic','semistatic','static'); 
-	DECLARE `WrapAround` INT; 
-	DECLARE `WrapAroundOffset` INT; 
+	DECLARE `WrapAround` BIGINT; 
+	DECLARE `WrapAroundOffset` IGINT; 
 	DECLARE `PublishData` BOOL DEFAULT FALSE; 
 
 	DECLARE `NotFound` INT DEFAULT FALSE; 
@@ -757,8 +757,8 @@ BEGIN
 # 						(`VariableId`, `Time`,`Data`); 
 		WHEN 'int' THEN
 			BEGIN
-				DECLARE `LatestData` INT; 
-				DECLARE `CurrentData` INT; 
+				DECLARE `LatestData` BIGINT; 
+				DECLARE `CurrentData` BIGINT; 
                 
 				IF ((`WrapAround` != NULL) AND (`WrapAround` > '0')) THEN
 					SET `CurrentData` = `Data` + `WrapAroundOffset`; 
@@ -1203,83 +1203,84 @@ DELIMITER ;
 DELIMITER $$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `store_info_variable`(
-IN `AgentName` VARCHAR(32),
-IN `NodeName` VARCHAR(32),
-IN `DeviceName` VARCHAR(32),
-IN `VariableName` VARCHAR(32),
-IN `DataType` VARCHAR(32),
-IN `DeviceType` VARCHAR(32),
-IN `WrapAround` INT ,
-IN `DataCoef` FLOAT,
-IN `DataOffset` FLOAT,
-IN `OutputVar` TINYINT)
-BEGIN
+        IN `AgentName` VARCHAR(32),
+        IN `NodeName` VARCHAR(32),
+        IN `DeviceName` VARCHAR(32),
+        IN `VariableName` VARCHAR(32),
+        IN `DataType` VARCHAR(32),
+        IN `DeviceType` VARCHAR(32),
+        IN `WrapAround` BIGINT ,
+        IN `DataCoef` FLOAT,
+        IN `DataOffset` FLOAT,
+        IN `OutputVar` TINYINT)
+    BEGIN
 	DECLARE `DeviceId` INT; 
 	DECLARE `VariableId` INT; 
 	DECLARE `Primary` TINYINT(1) DEFAULT TRUE; 
 	DECLARE `CleanDAT` VARCHAR(32); 
 	DECLARE `CleanDET` VARCHAR(32); 
-	DECLARE `CleanWrapAround` INT; 
+	DECLARE `CleanWrapAround` BIGINT; 
 
 	CASE (`DataType`) 
-		WHEN 'bool' THEN SET `CleanDAT` = 'bool'; 
-		WHEN 'int' THEN SET `CleanDAT` = 'int'; 
-		WHEN 'float' THEN SET `CleanDAT` = 'float'; 
-		ELSE SET `CleanDAT` = 'text'; 
+            WHEN 'bool' THEN SET `CleanDAT` = 'bool'; 
+            WHEN 'int' THEN SET `CleanDAT` = 'int'; 
+            WHEN 'float' THEN SET `CleanDAT` = 'float'; 
+            ELSE SET `CleanDAT` = 'text'; 
 	END CASE; 
 
 	CASE (`DeviceType`) 
-		WHEN 'semistatic' THEN SET `CleanDET` = 'semistatic'; 
-		WHEN 'static' THEN SET `CleanDET` = 'static'; 
-		ELSE SET `CleanDET` = 'dynamic'; 
+            WHEN 'semistatic' THEN SET `CleanDET` = 'semistatic'; 
+            WHEN 'static' THEN SET `CleanDET` = 'static'; 
+            ELSE SET `CleanDET` = 'dynamic'; 
 	END CASE; 
 
 	IF (`WrapAround` = '0') THEN
-		SET `CleanWrapAround` = NULL; 
+            SET `CleanWrapAround` = NULL; 
 	ELSE
-		SET `CleanWrapAround` = `WrapAround`; 
+            SET `CleanWrapAround` = `WrapAround`; 
 	END IF; 
 
 	SET `VariableId` = `get_variable_id`(`AgentName`,`NodeName`,`DeviceName`,`VariableName`); 
 
 	IF (`VariableId` >= '0') THEN
-		UPDATE `variable`
-			SET
+            UPDATE `variable`
+            	SET
 				`data_type` = `CleanDAT`,
 				`device_type` = `CleanDET`,
 				`wraparound` = `CleanWrapAround`,
 				`data_coef` = `DataCoef`,
 				`data_offset` = `DataOffset`,
 				`output` = `OutputVar`
-			WHERE `id` = `VariableId`; 
+		WHERE `id` = `VariableId`; 
 	ELSE
-		SET `Primary` = (`VariableName` = '---'); 
-		SET `DeviceId` = `get_device_id`(`AgentName`,`NodeName`,`DeviceName`); 
+            SET `Primary` = (`VariableName` = '---'); 
+            SET `DeviceId` = `get_device_id`(`AgentName`,`NodeName`,`DeviceName`); 
 
-		IF (`DeviceId` >= '0') THEN
-			INSERT INTO `variable`(`name`,`primary`,`output`,`device_id`,
-								   `data_type`,`device_type`,`wraparound`,`wraparound_offset`,`data_coef`,`data_offset`)
-				VALUES
-					(`VariableName`,`Primary`,`OutputVar`,`DeviceId`,
-					 `CleanDAT`,`CleanDET`,`CleanWrapAround`,'0',`DataCoef`,`DataOffset`); 
-			SET `VariableId` = LAST_INSERT_ID(); 
-		ELSE
-			CALL `store_info_device`(`AgentName`,`NodeName`,`DeviceName`); 
+            IF (`DeviceId` >= '0') THEN
+		INSERT INTO `variable`(`name`,`primary`,`output`,`device_id`,
+                                       `data_type`,`device_type`,`wraparound`,`wraparound_offset`,`data_coef`,`data_offset`)
+                    VALUES
+			(`VariableName`,`Primary`,`OutputVar`,`DeviceId`,
+			 `CleanDAT`,`CleanDET`,`CleanWrapAround`,'0',`DataCoef`,`DataOffset`); 
+		SET `VariableId` = LAST_INSERT_ID(); 
+            ELSE
+		CALL `store_info_device`(`AgentName`,`NodeName`,`DeviceName`); 
 
-			INSERT INTO `data_text`(`variable_id`,`time`,`data`)
-				VALUES
-					('-1',UNIX_TIMESTAMP(),
-					CONCAT('Warning: new variable -> Unexpected Device created  -> ',
-						   `AgentName`,'/',`NodeName`,'/',`DeviceName`,'/',`VariableName`)); 
+# 		INSERT INTO `data_text`(`variable_id`,`time`,`data`)
+#                     VALUES
+#                         ('-1',UNIX_TIMESTAMP(),
+# 			 CONCAT('Warning: new variable -> Unexpected Device created  -> ',
+# 						   `AgentName`,'/',`NodeName`,'/',`DeviceName`,'/',`VariableName`)); 
 
-			INSERT INTO `variable`(`name`,`primary`,`output`,`device_id`,
-								   `data_type`,`device_type`,`wraparound`,`wraparound_offset`,`data_coef`,`data_offset`)
-				VALUES
-					(`VariableName`,FALSE,`OutputVar`,`get_device_id`(`AgentName`,`NodeName`,`DeviceName`),
-					 `CleanDAT`,`CleanDET`,`CleanWrapAround`,'0',`DataCoef`,`DataOffset`); 
-			SET `VariableId` = LAST_INSERT_ID(); 
+		INSERT INTO `variable`(`name`,`primary`,`output`,`device_id`,
+                                       `data_type`,`device_type`,`wraparound`,`wraparound_offset`,`data_coef`,`data_offset`)
+                    VALUES
+                        (`VariableName`,FALSE,`OutputVar`,
+                         `get_device_id`(`AgentName`,`NodeName`,`DeviceName`),
+			 `CleanDAT`,`CleanDET`,`CleanWrapAround`,'0',`DataCoef`,`DataOffset`); 
+                SET `VariableId` = LAST_INSERT_ID(); 
 
-		END IF; 
+            END IF; 
 	END IF; 
 END$$
 

@@ -1,13 +1,13 @@
 -- *************************************************************************
 -- Product    : Home information and control
--- Date       : 2016-12-01
--- Copyright  : Copyright (C) 2016 Kjeholt Engineering. All rights reserved.
+-- Date       : 2017-02-25
+-- Copyright  : Copyright (C) 2017 Kjeholt Engineering. All rights reserved.
 -- Contact    : dev@kjeholt.se
 -- Url        : http://www-dev.kjeholt.se
 -- Licence    : ---
 -- -------------------------------------------------------------------------
 -- File       : create-tables.js
--- Version    : 1.0
+-- Version    : 1.1
 -- Author     : Bjorn Kjeholt
 -- *************************************************************************
 
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `data_bool` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `index2` (`variable_id` ASC, `time` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 1186
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `data_float` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `index2` (`variable_id` ASC, `time` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 2074704
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -119,11 +119,11 @@ CREATE TABLE IF NOT EXISTS `data_int` (
   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `variable_id` INT(11) NOT NULL,
   `time` INT(11) NOT NULL,
-  `data` INT(11) NOT NULL,
+  `data` BIGINT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `index2` (`variable_id` ASC, `time` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 370068
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -139,8 +139,8 @@ CREATE TABLE IF NOT EXISTS `data_publish` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `StoreIndex` USING BTREE (`variable_id` ASC, `time` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 109091
-DEFAULT CHARACTER SET = latin1;
+AUTO_INCREMENT = 1
+DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `data_text` (
   `error_severity` ENUM('na', 'observation', 'warning', 'error') NOT NULL DEFAULT 'na',
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 1446354
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `node` (
   `info` TEXT NULL DEFAULT NULL COMMENT 'Used for adding a description if the physical location of the node',
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 144
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -200,15 +200,15 @@ CREATE TABLE IF NOT EXISTS `variable` (
   `device_id` INT(11) NULL DEFAULT NULL,
   `data_type` ENUM('bool', 'int', 'float', 'text') NOT NULL DEFAULT 'text',
   `device_type` ENUM('dynamic', 'semistatic', 'static') NOT NULL DEFAULT 'dynamic',
-  `wraparound` INT(11) NULL DEFAULT NULL COMMENT 'Wraparound value valid for accumulated type of devices.',
-  `wraparound_offset` INT(11) NOT NULL DEFAULT '0' COMMENT 'Every time a wraparound occur, this value will be updated with the old figure plus the wraparound value and the data stored in the unitdata_float table will be the received value + this value.',
+  `wraparound` BIGINT NULL DEFAULT NULL COMMENT 'Wraparound value valid for accumulated type of devices.',
+  `wraparound_offset` BIGINT NOT NULL DEFAULT '0' COMMENT 'Every time a wraparound occur, this value will be updated with the old figure plus the wraparound value and the data stored in the unitdata_float table will be the received value + this value.',
   `output_file_path` VARCHAR(120) NULL DEFAULT NULL,
   `data_coef` FLOAT NOT NULL DEFAULT '1',
   `data_offset` FLOAT NOT NULL DEFAULT '0',
   `retain` INT(11) NULL DEFAULT '0' COMMENT 'One ',
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 240
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
 
 
