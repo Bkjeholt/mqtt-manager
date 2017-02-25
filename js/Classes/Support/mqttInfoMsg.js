@@ -34,6 +34,7 @@ exports.checkMsg = function(topic,body,db,mqtt) {
                     // 
                     // A new or update device and/or variable have been received
                     //
+                    console.log("MQTT info present: topic: "+JSON.stringify(topic)+" body: "+JSON.stringify(body));
                     q = "CALL `store_info_variable`('" + topic.agent + "',"+
                                                     "'" + topic.node + "',"+
                                                     "'" + topic.device + "',"+
