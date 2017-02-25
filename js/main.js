@@ -17,6 +17,7 @@ var healthClass = require("./Classes/healthCheck");
 var configInfo = {  config: {
                         name: process.env.DOCKER_CONTAINER_NAME,
                         rev:  process.env.DOCKER_IMAGE_TAG,
+                        debug: (process.env.DEBUG !== undefined)? process.env.DEBUG : 0,
                         docker: {
                             image: process.env.DOCKER_IMAGE_NAME,
                             image_tag: process.env.DOCKER_IMAGE_TAG,

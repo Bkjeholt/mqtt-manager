@@ -1,6 +1,6 @@
 {
   "name" : "mqtt-manager",
-  "version" : "0.5.2",
+  "version" : "0.7.2",
   "description" : "Home information Center mqtt-based Manager\nHistory:\n0.4  Added docker links to both mysql and mqtt servers",
   "keywords" : [ "hic", "mqtt-based", "manager" ],
   "author" : {
@@ -13,7 +13,7 @@
   "dependencies" : {
     "mqtt" : "1.7.3",
     "mysql" : "2.10.2",
-    "wait-for-port":"0.0.2"
+    "wait-for-port" : "0.0.2"
   },
   "scripts" : {
     "start" : "node js/main.js",

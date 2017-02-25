@@ -16,10 +16,10 @@
     process.env.DOCKER_IMAGE_TAG = "0.7.0";
     
     process.env.MYSQL_IP_ADDR = "127.0.0.1";
-    process.env.MYSQL_PORT_NO = "3306";
+    process.env.MYSQL_PORT_NO = "13306";
     process.env.MYSQL_ENV_MYSQL_ROOT_PASSWORD = "hic";
     process.env.MYSQL_ENV_MYSQL_DATABASE = "hic";
-    process.env.
+    process.env.DEBUG = 1;
             
     process.env.MQTT_IP_ADDR = "192.168.1.10";
     process.env.MQTT_PORT_NO = "1883";

@@ -1245,9 +1245,9 @@ BEGIN
 	IF (`VariableId` >= '0') THEN
 		UPDATE `variable`
 			SET
-				`data_type` = `DataType`,
-				`device_type` = `DeviceType`,
-				`wraparound` = `WrapAround`,
+				`data_type` = `CleanDAT`,
+				`device_type` = `CleanDET`,
+				`wraparound` = `CleanWrapAround`,
 				`data_coef` = `DataCoef`,
 				`data_offset` = `DataOffset`,
 				`output` = `OutputVar`
@@ -1261,7 +1261,7 @@ BEGIN
 								   `data_type`,`device_type`,`wraparound`,`wraparound_offset`,`data_coef`,`data_offset`)
 				VALUES
 					(`VariableName`,`Primary`,`OutputVar`,`DeviceId`,
-					 `DataType`,`DeviceType`,`WrapAround`,'0',`DataCoef`,`DataOffset`); 
+					 `CleanDAT`,`CleanDET`,`CleanWrapAround`,'0',`DataCoef`,`DataOffset`); 
 			SET `VariableId` = LAST_INSERT_ID(); 
 		ELSE
 			CALL `store_info_device`(`AgentName`,`NodeName`,`DeviceName`); 
@@ -1276,7 +1276,7 @@ BEGIN
 								   `data_type`,`device_type`,`wraparound`,`wraparound_offset`,`data_coef`,`data_offset`)
 				VALUES
 					(`VariableName`,FALSE,`OutputVar`,`get_device_id`(`AgentName`,`NodeName`,`DeviceName`),
-					 `DataType`,`DeviceType`,`WrapAround`,'0',`DataCoef`,`DataOffset`); 
+					 `CleanDAT`,`CleanDET`,`CleanWrapAround`,'0',`DataCoef`,`DataOffset`); 
 			SET `VariableId` = LAST_INSERT_ID(); 
 
 		END IF; 

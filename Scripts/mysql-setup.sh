@@ -21,7 +21,7 @@ SQL_PASSWORD=${4}
 SQL_DATABASE=${5}
 
 SQL_SETUP_TABLES_FILE_PATH=create-tables-v1.0.sql
-SQL_SETUP_PROCEDURES_FILE_PATH=create-procedures-v1.0.sql
+SQL_SETUP_PROCEDURES_FILE_PATH=create-procedures-v1.1.sql
 SQL_SETUP_FUNCTIONS_FILE_PATH=create-functions-v1.0.sql
 SQL_SETUP_VIEWS_FILE_PATH=create-views-v1.0.sql
 
