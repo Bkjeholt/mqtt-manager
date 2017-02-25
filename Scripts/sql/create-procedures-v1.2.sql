@@ -6,7 +6,7 @@
 -- Url        : http://www-dev.kjeholt.se
 -- Licence    : ---
 -- -------------------------------------------------------------------------
--- File       : create-procedures.js
+-- File       : create-procedures-vx.x.sql
 -- Version    : 1.2
 -- Author     : Bjorn Kjeholt
 -- *************************************************************************
