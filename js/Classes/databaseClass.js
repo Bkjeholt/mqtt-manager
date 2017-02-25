@@ -160,7 +160,7 @@ databaseClass = function (ci) {
     this.setup = function(callback) {
         console.log("MQTT-MANAGER: Entering the db wait loop. IP-addr="+self.ci.mysql.ip_addr+":"+self.ci.mysql.port_no);
         waitForPort(self.ci.mysql.ip_addr, self.ci.mysql.port_no, function(err) {
-                console.log("MQTT-MANAGER: Leaving the db wait loop err=",err,"<<<<>>>>");
+                console.log("MQTT-MANAGER: Leaving the db wait loop");
                 if (!err) { 
                     self.db = mysql.createConnection({ host     : self.ci.mysql.ip_addr,
                                                        port     : self.ci.mysql.port_no,

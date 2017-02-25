@@ -727,7 +727,7 @@ BEGIN
 	DECLARE `DataOffset` FLOAT DEFAULT '0'; 
 	DECLARE `DeviceType` ENUM ('dynamic','semistatic','static'); 
 	DECLARE `WrapAround` BIGINT; 
-	DECLARE `WrapAroundOffset` IGINT; 
+	DECLARE `WrapAroundOffset` BIGINT; 
 	DECLARE `PublishData` BOOL DEFAULT FALSE; 
 
 	DECLARE `NotFound` INT DEFAULT FALSE; 

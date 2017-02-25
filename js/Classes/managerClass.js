@@ -123,7 +123,7 @@ managerClass = function(ci) {
                 self.db.setup(function(err) {
                         var dbSetupCommand = "";
                         if (err) {
-                            console.log("Problem with connecting to the database, retry in a second");
+                            console.log("Problem with connecting to the database, retry in five seconds");
     
                             setTimeout(function() {
                                     dbSetupLoop(callback);
