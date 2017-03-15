@@ -1,13 +1,13 @@
 -- *************************************************************************
 -- Product    : Home information and control
--- Date       : 2017-02-25
+-- Date       : 2017-03-02
 -- Copyright  : Copyright (C) 2017 Kjeholt Engineering. All rights reserved.
 -- Contact    : dev@kjeholt.se
 -- Url        : http://www-dev.kjeholt.se
 -- Licence    : ---
 -- -------------------------------------------------------------------------
 -- File       : create-procedures-vx.x.sql
--- Version    : 1.2
+-- Version    : 1.3
 -- Author     : Bjorn Kjeholt
 -- *************************************************************************
 
@@ -730,6 +730,7 @@ BEGIN
 	DECLARE `WrapAroundOffset` BIGINT; 
 	DECLARE `PublishData` BOOL DEFAULT FALSE; 
 
+        DECLARE `ResultData` TEXT;
 	DECLARE `NotFound` INT DEFAULT FALSE; 
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET `NotFound` = TRUE; 
 
@@ -751,7 +752,10 @@ BEGIN
 			REPLACE INTO `data_bool`
 				SET	`variable_id` = `VariableId`,
 					`time` = `Time`,
-                    `data` = `Data`; 
+                                        `data` = `Data`; 
+
+                        SET `ResultData` = `Data`;
+
 # 				INSERT INTO `data_bool`(`variable_id`,`time`,`data`)
 # 					VALUES
 # 						(`VariableId`, `Time`,`Data`); 
@@ -778,7 +782,10 @@ BEGIN
 			REPLACE INTO `data_int`
 				SET	`variable_id` = `VariableId`,
 					`time` = `Time`,
-                    `data` = `CurrentData`; 
+                                        `data` = `CurrentData`; 
+
+                        SET `ResultData` = `CurrentData`;
+
 			END; 
 		WHEN 'float' THEN
 #			INSERT INTO .`data_float`(`variable_id`,`time`,`data`)
@@ -788,15 +795,25 @@ BEGIN
 			REPLACE INTO `data_float`
 				SET	`variable_id` = `VariableId`,
 					`time` = `Time`,
-                  `data` = (`Data`*`DataCoef`+`DataOffset`); 
+                                        `data` = (`Data`*`DataCoef`+`DataOffset`); 
+
+                        SET `ResultData` = (`Data`*`DataCoef`+`DataOffset`);
+
 		WHEN 'text' THEN
 				INSERT INTO `data_text`(`variable_id`,`time`,`data`)
 					VALUES
 						(`VariableId`, `Time`,`Data`); 
+
+                                SET `ResultData` = `Data`;
+
 		ELSE
 				INSERT INTO `data_text`(`variable_id`,`time`,`data`)
 					VALUES
 						(`VariableId`, `Time`,CONCAT('Warning: Non-supported datatype (',`DataType`,') Data ->',`Data`)); 
+
+                                SET `ResultData` = `Data`;
+
+
 	END CASE; 
     
 	update_calc_mod_info: BEGIN
@@ -821,7 +838,7 @@ BEGIN
 		REPLACE INTO `data_publish`
 			SET `variable_id` = `VariableId`,
 				`time` = `Time`,
-				`data` = `Data`,
+				`data` = `ResultData`,
 				`published` = false; 
 	END IF; 
 END$$
