@@ -11,6 +11,7 @@
  Author     : Bjorn Kjeholt
  *************************************************************************/
 
+var calculate = function()
 exports.checkMsg = function(topic,body,db,callback) {
     switch(topic.order) {
         case 'present' :
