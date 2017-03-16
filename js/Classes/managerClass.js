@@ -29,7 +29,9 @@ managerClass = function(ci) {
     this.db = null;
 
     this.mqttSubscribedMessage = function(topicStr, messageStr, packet) {
-        self.mqtt.parseSubscribedMessage(topicStr, messageStr, function(err,topic,body) {
+        var errInfo;
+        
+        errInfo = self.mqtt.parseSubscribedMessage(topicStr, messageStr, function(err,topic,body) {
             if (self.ci.config.debug !== 0)
                 console.log("Received MQTT message. Topic=" + JSON.stringify(topic) + "  Payload=" + JSON.stringify(body) + " err:",err);
             if (!err) {
@@ -69,6 +71,12 @@ managerClass = function(ci) {
                                     order: "warning"},err);
             }
         });
+        
+        if (errInfo) {
+            self.mqtt.publish({ group: "error",
+                                order: "warning"},errInfo);
+            
+        };
     };
     
     this.healthCheck_db = function(callback) {

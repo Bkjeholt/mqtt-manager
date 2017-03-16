@@ -72,6 +72,7 @@ mqttHandler = function(ci) {
 
         if (!err) {
             callback(null,result.topic,result.body);
+            return (null);
         } else {
             err.result = result;
             return(err);

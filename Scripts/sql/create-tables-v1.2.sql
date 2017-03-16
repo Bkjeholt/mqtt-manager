@@ -1,13 +1,13 @@
 -- *************************************************************************
 -- Product    : Home information and control
--- Date       : 2017-02-25
+-- Date       : 2017-03-15
 -- Copyright  : Copyright (C) 2017 Kjeholt Engineering. All rights reserved.
 -- Contact    : dev@kjeholt.se
 -- Url        : http://www-dev.kjeholt.se
 -- Licence    : ---
 -- -------------------------------------------------------------------------
 -- File       : create-tables.js
--- Version    : 1.1
+-- Version    : 1.2
 -- Author     : Bjorn Kjeholt
 -- *************************************************************************
 
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `agent` (
   `name` VARCHAR(32) NOT NULL,
   `ver` VARCHAR(16) NULL DEFAULT '---',
   `msg_version` VARCHAR(8) NOT NULL DEFAULT '1.0',
-  `agent_state` ENUM('unknown', 'connected', 'timeout', 'non-validated') NOT NULL DEFAULT 'unknown',
+  `agent_state` ENUM('unknown', 'connected', 'timeout', 'non-validated', 'hidden') NOT NULL DEFAULT 'unknown',
   `agent_last_access` INT(11) NOT NULL DEFAULT '0' COMMENT 'Updated with current epoch time at every received message',
   `info` TEXT NULL DEFAULT NULL COMMENT 'Used for adding information about for example physical and logical location of the agent',
   PRIMARY KEY (`id`))
