@@ -126,6 +126,18 @@ ENGINE = InnoDB
 AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
 
+-- -----------------------------------------------------
+-- Table `data_modified`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `data_modified` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `variable_id` INT(11) NOT NULL,
+  `time` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `time_index` (`time` ASC))
+ENGINE = InnoDB
+AUTO_INCREMENT = 1
+DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
 -- Table `data_publish`

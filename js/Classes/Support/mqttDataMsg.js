@@ -26,7 +26,7 @@ exports.checkMsg = function(topic,body,db,callback) {
                             if (err) {
                                                 // TODO
                             } else {
-                            
+                                
                             }
                         });
             } else {
@@ -37,27 +37,28 @@ exports.checkMsg = function(topic,body,db,callback) {
             db.query("CALL `get_data`( '" + topic.agent+"',"+
                                       "'" + topic.node + "',"+
                                       "'" + topic.device + "',"+
-                                      "'" + topic.variable + "')", 
-                                        function(err,rows) {
-                                            var data_time;
-                                            var data_value = "";
+                                      "'" + topic.variable + "',"+
+                                      "'0')",                       // Get the latest data 
+                     function(err,rows) {
+                            var data_time;
+                            var data_value = "";
                                 
-                                            if (err) {
-                                                // TODO
-                                            } else {
-                                                if (rows[0].length > 0) {
-                                                    /*
-                                                     * 
-                                                     */
-                                                    callback(null, { topic: { group: "data",
-                                                                              order: "set",
-                                                                              agent: topic.agent,
-                                                                              node: topic.node,
-                                                                              device: topic.device,
-                                                                              variable: topic.variable },
-                                                                     body: rows[0][0].message_body });
+                            if (err) {
+                                // TODO
+                            } else {
+                                if (rows[0].length > 0) {
+                                    /*
+                                     * 
+                                     */
+                                    callback(null, { topic: { group: "data",
+                                                              order: "set",
+                                                              agent: topic.agent,
+                                                              node: topic.node,
+                                                              device: topic.device,
+                                                              variable: topic.variable },
+                                                     body: rows[0][0].message_body });
 
-                                                } else {
+                                } else {
 /*                                                    self.mqtt.publish({ order: "data",
                                                                         suborder: "resp",
                                                                         agent: topic.agent,
@@ -66,10 +67,10 @@ exports.checkMsg = function(topic,body,db,callback) {
                                                                         subdevice: topic.subdevice },
                                                                       { error: "No data available" });
 */                                                    
-                                                }
-                                            }
-                                        });
-                            break;
+                                }
+                            }
+                        });
+            break;
         default:
             break;
     }

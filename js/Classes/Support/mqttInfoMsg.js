@@ -11,7 +11,7 @@
  Author     : Bjorn Kjeholt
  *************************************************************************/
 
-exports.checkMsg = function(topic,body,db,mqtt) {
+exports.checkMsg = function(topic,body,db,callback) {
     var q = "";
     switch(topic.order) {
         case 'present' :
@@ -52,7 +52,7 @@ exports.checkMsg = function(topic,body,db,mqtt) {
                             if (err) {
                                 // TODO
                             } else {
-                            
+                                // Do nothing the mqtt info message was processed correctly, no further actions are required.
                             }
                         });
                         
