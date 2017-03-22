@@ -102,19 +102,22 @@ function dbBasic () {
 
 dbBasic.prototype.query = function (query, callback) {
         if (dbConnected) {
-            this.db.query(query, function(err,rows) {
-                    if (!err) {
-                        callback(null, rows);
+            this.db.query(query, function(err,error, results, fields) {
+                    if (!error) {
+                        callback(null, results);
                     } else {
                         callback({ error: "DB query failing",
-                                   info: err,
-                                   query: query },null);
+                                   ecode: 1,
+                                   info: { err: error,
+                                           results: results,
+                                           fields: fields,
+                                           query: query } },null);
                     }
                 });
         } else {
             callback({ error: "DB not connected, query not executed",
-                       info: {},
-                       query: query },null);
+                       ecode: 2,
+                       info: { query: query } },null);
         }
     };
 
@@ -135,3 +138,29 @@ dbBasic.prototype.healthCheck = function(callback) {
         }
     };
     
+dbBasic.prototype.storeData = function(variableId, sampleTime, sampleData, callback) {
+        var q;
+        if (dbConnected) {
+            q = "CALL `store_data_vid`('"+variableId+"','"+
+                                          sampleTime+"','"+
+                                          sampleData+"','"+
+                                          "Key-"+variableId+"--"+sampleTime+"')";
+            this.db.query(q, function(error,results,fields) {
+                    if (!err) {
+                        callback(null,results[0]);
+                    } else {
+                        callback({ error: "DB storeData failing",
+                                   ecode: 1,
+                                   info: { err: error,
+                                           results: results,
+                                           fields: fields,
+                                           query: q } },null);
+                    }
+                });
+        } else {
+            callback({ error: "DB not connected, query not executed",
+                       ecode: 2,
+                       info: { query: query } },null);
+            
+        }
+    };

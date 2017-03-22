@@ -21,7 +21,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 DELIMITER $$
 
-CREATE DEFINER=`root`@`%` PROCEDURE `get_data`(
+CREATE PROCEDURE `get_data`(
 IN `AgentName` VARCHAR(32),
 IN `NodeName` VARCHAR(32),
 IN `DeviceName` VARCHAR(32),
@@ -45,6 +45,72 @@ BEGIN
         
             SELECT `TopicAddr` AS `topic_addr`,`Body` AS `message_body`; 
 	END IF; 
+END$$
+
+CREATE PROCEDURE `get_data_vid_abs_time`(
+IN `VariableId` INT,
+IN `SampleTime` INT,
+OUT `OutData` TEXT,
+OUT `OutSampleTime` INT,
+OUT `DataAvailable` BOOLEAN)
+BEGIN
+    DECLARE `DataType` ENUM ('bool','int','float','text'); 
+    DECLARE `DataValue` TEXT; 
+    DECLARE `DataTime` INT; 
+    DECLARE `Result` TEXT; 
+ 
+    DECLARE `DataNotFound` BOOLEAN DEFAULT FALSE; 
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET `DataNotFound` = TRUE; 
+
+    SET `DataAvailable` = FALSE; 
+    IF (`VariableId` != NULL) THEN
+        SET `DataType` = (SELECT `data_type`
+                            FROM `variable`
+                            WHERE (`id` = `VariableId`)); 
+                            
+        CASE `DataType`
+            WHEN 'bool' THEN
+                SELECT `data`,`time` 
+                    INTO `DataValue`,`DataTime`
+                    FROM `data_bool`
+                    WHERE 
+                        (`variable_id` = `VariableId`) AND 
+                        (`time` <= `SampleTime`)
+                    ORDER BY `time` DESC
+                    LIMIT 1; 
+            WHEN 'int' THEN
+                SELECT `data`,`time` 
+                    INTO `DataValue`,`DataTime`
+                    FROM `data_int`
+                    WHERE 
+                        (`variable_id` = `VariableId`) AND 
+                        (`time` <= `SampleTime`)
+                    ORDER BY `time` DESC
+                    LIMIT 1; 
+            WHEN 'float' THEN
+                    SELECT `data`,`time` 
+                        INTO `DataValue`,`DataTime`
+                        FROM `data_float`
+                        WHERE 
+                            (`variable_id` = `VariableId`) AND 
+                            (`time` <= `SampleTime`)
+                        ORDER BY `time` DESC
+			LIMIT 1; 
+            ELSE
+                SELECT `data`,`time` 
+                    INTO `DataValue`,`DataTime`
+                    FROM `data_text`
+                    WHERE 
+                        (`variable_id` = `VariableId`) AND 
+                        (`time` <= `SampleTime`)
+                    ORDER BY `time` DESC
+                    LIMIT 1; 
+        END CASE; 
+  
+        SET `DataAvailable` = (`DataNotFound` != TRUE);
+
+    END IF; 
+
 END$$
 
 DELIMITER ;

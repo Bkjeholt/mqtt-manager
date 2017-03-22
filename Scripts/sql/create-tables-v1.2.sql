@@ -32,23 +32,6 @@ AUTO_INCREMENT = 26
 DEFAULT CHARACTER SET = utf8;
 
 
--- -----------------------------------------------------
--- Table `calc`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `calc` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(32) NOT NULL,
-  `type` VARCHAR(16) NOT NULL,
-  `variable_id` INT(11) NOT NULL,
-  `active` TINYINT(4) NOT NULL DEFAULT '0',
-  `data_trans_key` VARCHAR(32) NOT NULL DEFAULT 'undefined-key' COMMENT 'A key value used to identify the transaction where the initial data was stored ',
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `Update` USING BTREE (`active` ASC, `id` ASC),
-  UNIQUE INDEX `Namn` USING BTREE (`name` ASC))
-ENGINE = InnoDB
-AUTO_INCREMENT = 23
-DEFAULT CHARACTER SET = latin1;
-
 
 -- -----------------------------------------------------
 -- Table `calc_input`

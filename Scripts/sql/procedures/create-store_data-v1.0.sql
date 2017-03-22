@@ -21,11 +21,10 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 DELIMITER $$
 
-CREATE DEFINER=`root`@`%` PROCEDURE `store_data_vid`(
+CREATE PROCEDURE `store_data_vid`(
 IN `VariableId` INT,
 IN `Time` INT,
-IN `Data` TEXT,
-IN `DataTransactionKey` VARCHAR(32))
+IN `Data` TEXT)
 BEGIN
 	DECLARE `DataType` ENUM('bool','int','float','text'); 
 	DECLARE `DataCoef` FLOAT DEFAULT '1.0'; 
@@ -198,6 +197,31 @@ BEGIN
     END IF; 
     
 END$$
+
+-- -----------------------------------------------------
+-- procedure store_data_calc
+-- -----------------------------------------------------
+
+CREATE PROCEDURE `store_data_calc`(
+IN `DeviceId` INT,
+IN `DstCalcVarNo` INT,
+IN `SampleTime` INT,
+IN `Data` TEXT)
+BEGIN
+    DECLARE `DstVariableId` INT;
+    DECLARE `DstVariableIdNotFound` INT DEFAULT FALSE; 
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET `DstVariableIdNotFound` = TRUE; 
+
+    SET `DstVariableId` = (SELECT `variable`.`id` 
+                                FROM `variable` 
+                                WHERE (`device_id` = `DeviceId`) AND
+                                      (`calc_output_number` = `DstCalcVarNo`)
+                                LIMIT 1); 
+
+    IF (`DstVariableIdNotFound` = FALSE) THEN 
+        CALL `store_data_vid`(`DstVariableId`, `SampleTime`,(`Data`*`CalcCoef` + `CalcOffset`)); 
+
+    END IF;
 
 DELIMITER ;
 
