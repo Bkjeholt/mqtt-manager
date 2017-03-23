@@ -1,13 +1,13 @@
 -- *************************************************************************
 -- Product    : Home information and control
--- Date       : 2017-03-15
+-- Date       : 2017-03-23
 -- Copyright  : Copyright (C) 2017 Kjeholt Engineering. All rights reserved.
 -- Contact    : dev@kjeholt.se
 -- Url        : http://www-dev.kjeholt.se
 -- Licence    : ---
 -- -------------------------------------------------------------------------
 -- File       : create-get_data-vx.x.sql
--- Version    : 1.4
+-- Version    : 1.0
 -- Author     : Bjorn Kjeholt
 -- *************************************************************************
 
@@ -110,6 +110,39 @@ BEGIN
         SET `DataAvailable` = (`DataNotFound` != TRUE);
 
     END IF; 
+
+END$$
+
+CREATE PROCEDURE `get_data_calc`(
+IN `DeviceId` INT,
+IN `RequestedCalcVarNo` INT,
+IN `RequestedTime` INT,
+OUT `ResponseTime` INT,
+OUT `ResponseData` TEXT,
+OUT `ResponseDataAvailable` BOOLEAN )
+BEGIN
+    DECLARE `RequestedVariableId` INT;
+    DECLARE `RequestedVariableIdNotFound` INT DEFAULT FALSE; 
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET `RequestedVariableIdNotFound` = TRUE; 
+
+    SET `RequestedVariableId` = (SELECT `variable`.`id` 
+                                FROM `variable` 
+                                WHERE (`device_id` = `DeviceId`) AND
+                                      (`calc_output_number` = `RequestedCalcVarNo`)
+                                LIMIT 1); 
+
+    IF (`RequestedVariableIdNotFound` = FALSE) THEN 
+        BEGIN
+
+        CALL `get_data_vid_abs_time`(`RequestedVariableId`, `RequestedTime`,
+                                     `ResponseData`, `ResponseTime`, `ResponseDataAvailable` ); 
+
+        END
+    ELSE
+        BEGIN
+            SET `ResponseDataAvailable` = FALSE;
+        END
+    END IF;
 
 END$$
 

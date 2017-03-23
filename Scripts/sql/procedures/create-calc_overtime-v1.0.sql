@@ -41,6 +41,24 @@ BEGIN
     DECLARE `CalcCoef` FLOAT DEFAULT '1.0'; 
     DECLARE `CalcOffset` FLOAT DEFAULT '0'; 
 
+    create_timing_info: BEGIN
+        DECLARE `LastTime` INT;
+        DECLARE `LastValue` FLOAT;
+
+        DECLARE `LastDataAvailable` BOOLEAN DEFAULT FALSE;
+        DECLARE `LoopCounter` INT DEFAULT '3';
+
+        timing_loop: LOOP
+            CALL `get_data_calc`(`DeviceId`,`LoopCounter`,`SampleTime`,`LastTime`,`LastValue`,`LastDataAvailable`);
+
+            IF (`LastDataAvailable`) OR (`LoopCounter` = '1') THEN
+                LEAVE timing_loop;
+            END IF;
+
+            SET `LoopCounter` = `LoopCounter` - '1';
+        END LOOP;
+    END create_timing_info;
+
     check_for_parameters: BEGIN
         DECLARE `ParamName` VARCHAR(16);
         DECLARE `ParamValue` VARCHAR(16);

@@ -219,7 +219,7 @@ BEGIN
                                 LIMIT 1); 
 
     IF (`DstVariableIdNotFound` = FALSE) THEN 
-        CALL `store_data_vid`(`DstVariableId`, `SampleTime`,(`Data`*`CalcCoef` + `CalcOffset`)); 
+        CALL `store_data_vid`(`DstVariableId`, `SampleTime`,`Data`); 
 
     END IF;
 
