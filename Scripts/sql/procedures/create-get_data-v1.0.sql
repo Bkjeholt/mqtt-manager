@@ -137,11 +137,11 @@ BEGIN
         CALL `get_data_vid_abs_time`(`RequestedVariableId`, `RequestedTime`,
                                      `ResponseData`, `ResponseTime`, `ResponseDataAvailable` ); 
 
-        END
+        END;
     ELSE
         BEGIN
             SET `ResponseDataAvailable` = FALSE;
-        END
+        END;
     END IF;
 
 END$$

@@ -36,7 +36,7 @@ BEGIN
                 `data_modified`.`time` AS `SampleTime`
 			FROM `data_modified`,`device`,`calc_input`
             WHERE
-				(`data_modified`.`variable_id` = `calc_iput`.`variable_id`) AND
+				(`data_modified`.`variable_id` = `calc_input`.`variable_id`) AND
 				(`device`.`id` = `calc_input`.`device_id`) AND
 				(`device`.`calc_active` = TRUE)
 			ORDER BY `data_modified`.`time` ASC, `data_modified`.`id` ASC; 
@@ -104,7 +104,7 @@ BEGIN
 -- 								LIMIT 1) ); 
 
     END LOOP; 
-END
+END$$
 
 
 DELIMITER ;

@@ -21,7 +21,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 DELIMITER $$
 
-CREATE PROCEDURE `calc_linear`(
+CREATE PROCEDURE `calc_minmaxavg`(
     IN `DeviceId` INT,
     IN `SampleTime` INT)
 BEGIN
@@ -33,6 +33,9 @@ BEGIN
     DECLARE `InputDataType` VARCHAR(16); 
     DECLARE `InputDataTime` INT; 
     DECLARE `InputDataAvaliable` BOOLEAN; 
+
+    DECLARE `VariableId` INT DEFAULT '-1';
+    DECLARE `FirstData` BOOLEAN DEFAULT TRUE;
 
     DECLARE `ResultMinData` FLOAT;
     DECLARE `ResultMaxData` FLOAT;
@@ -53,7 +56,7 @@ BEGIN
 
     read_input_data_loop: LOOP
         FETCH `Cursor`
-            INTO `CalcInputId`,`VariableId`; 
+            INTO `VariableId`; 
 
         IF (`Done`) THEN
             LEAVE read_input_data_loop; 
@@ -87,9 +90,9 @@ BEGIN
 
     CALL `store_data_calc`(`DeviceId`, '1', `SampleTime`,`ResultMinData`); 
     CALL `store_data_calc`(`DeviceId`, '2', `SampleTime`,`ResultMaxData`); 
-    CALL `store_data_calc`(`DeviceId`, '3', `SampleTime`,(`ResultSumData`/`ResultNumberOfVariables`); 
+    CALL `store_data_calc`(`DeviceId`, '3', `SampleTime`,(`ResultSumData`/`ResultNumberOfVariables`)); 
 
-END
+END$$
 DELIMITER ;
 
 SET SQL_MODE=@OLD_SQL_MODE;

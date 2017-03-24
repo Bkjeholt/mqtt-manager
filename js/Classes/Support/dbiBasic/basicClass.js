@@ -27,7 +27,8 @@ function dbCreateConnection (callback) {
                                                     port     : dbConnectInfo.port_no,
                                                     user     : dbConnectInfo.user,
                                                     password : dbConnectInfo.passw,
-                                                    database : dbConnectInfo.scheme });
+                                                    database : dbConnectInfo.scheme,
+                                                    supportBigNumbers: true });
             dbConnection.connect(function(err) {
                 dbConnecting = false;
                 if (!err) {
@@ -100,9 +101,16 @@ function dbBasic () {
         });
 };
 
-dbBasic.prototype.query = function (query, callback) {
+dbBasic.prototype.query = function (queryJson, callback) {
+        var sqlTimeOut = (queryJson.timeout !== undefined)? queryJson.timeout : 40000;
+        var sqlValues  = (queryJson.values !== undefined)? queryJson.values : [];
+        
         if (dbConnected) {
-            this.db.query(query, function(err,error, results, fields) {
+            
+            this.db.query({ sql:     queryJson.sql,
+                            timeout: sqlTimeOut,
+                            values:  sqlValues },
+                function(error, results, fields) {
                     if (!error) {
                         callback(null, results);
                     } else {

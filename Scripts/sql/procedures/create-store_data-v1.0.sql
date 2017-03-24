@@ -222,7 +222,7 @@ BEGIN
         CALL `store_data_vid`(`DstVariableId`, `SampleTime`,`Data`); 
 
     END IF;
-
+END$$
 DELIMITER ;
 
 SET SQL_MODE=@OLD_SQL_MODE;
